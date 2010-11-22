@@ -1076,5 +1076,23 @@ Y-axis of the envelope
 [HOME] Restore map focus
 == [HOME] Восстановить фокусировку карты
 
+Background
+== Фон
+
+Old
+== Старый
+
+Grass
+== Трава
+
+Jungle
+== Джунгли
+
+Winter
+== Зима
+
+Desert
+== Пустыня
+
 ##### old translations #####
 
