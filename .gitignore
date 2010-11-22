@@ -23,3 +23,9 @@ tileset_borderfix
 tileset_borderfix_d
 versionsrv
 versionsrv_d
+
+bam.exe
+*.exe
+*.pdb
+*.res
+*.dll
