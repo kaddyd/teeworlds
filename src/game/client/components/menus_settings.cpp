@@ -620,11 +620,12 @@ void CMenus::RenderSettingsGraphics(CUIRect MainView)
 	
 	static float s_BackgroundScrollValue = 0;
 	
-	UiDoListboxStart(&s_BackgroundScrollValue, &Button, 19.0f, Localize("Background"), "", 5, 1, g_Config.m_UiNewBackground, s_BackgroundScrollValue);
+	UiDoListboxStart(&s_BackgroundScrollValue, &Button, 21.0f, Localize("Background"), "", 5, 1, g_Config.m_UiNewBackground, s_BackgroundScrollValue);
 	
 	for (int i = 0; i < 5; i++)
 	{
 		CListboxItem Item = UiDoListboxNextItem(&Backgrounds[i], g_Config.m_UiNewBackground == i);
+		Item.m_Rect.x += 5.0f;
 		UI()->DoLabel(&Item.m_Rect, Localize(Backgrounds[i]), 15.0f, -1);
 	}
 
