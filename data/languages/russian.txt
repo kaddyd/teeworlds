@@ -10,6 +10,137 @@
 %ds left
 == осталось %d сек.
 
+Please wait
+== Подождите
+
+%d minute(s)
+== %d минут
+
+%d second(s)
+== %d секунд
+
+# Уродливо? Да. Надо будет добавить хоть чуть-чуть логики в локализацию, потому что изменять что-то в коде специально для русского языка - это как-то не профит =\
+
+1 минут
+== 1 минуту
+
+2 минут
+== 2 минуты
+
+3 минут
+== 3 минуты
+
+4 минут
+== 4 минуты
+
+1 секунд
+== 1 секунду
+
+2 секунд
+== 2 секунды
+
+3 секунд
+== 3 секунды
+
+4 секунд
+== 4 секунды
+
+21 минут
+== 21 минуту
+
+22 минут
+== 22 минуты
+
+23 минут
+== 23 минуты
+
+24 минут
+== 24 минуты
+
+21 секунд
+== 21 секунду
+
+22 секунд
+== 22 секунды
+
+23 секунд
+== 23 секунды
+
+24 секунд
+== 24 секунды
+
+31 минут
+== 31 минуту
+
+32 минут
+== 32 минуты
+
+33 минут
+== 33 минуты
+
+34 минут
+== 34 минуты
+
+31 секунд
+== 31 секунду
+
+32 секунд
+== 32 секунды
+
+33 секунд
+== 33 секунды
+
+34 секунд
+== 34 секунды
+
+41 минут
+== 41 минуту
+
+42 минут
+== 42 минуты
+
+43 минут
+== 43 минуты
+
+44 минут
+== 44 минуты
+
+41 секунд
+== 41 секунду
+
+42 секунд
+== 42 секунды
+
+43 секунд
+== 43 секунды
+
+44 секунд
+== 44 секунды
+
+51 минут
+== 51 минуту
+
+52 минут
+== 52 минуты
+
+53 минут
+== 53 минуты
+
+54 минут
+== 54 минуты
+
+51 секунд
+== 51 секунду
+
+52 секунд
+== 52 секунды
+
+53 секунд
+== 53 секунды
+
+54 секунд
+== 54 секунды
+
 %s Right click for context menu.
 == %s Правая кнопка мыши для контекстного меню
 
@@ -448,6 +579,9 @@ Normal animation speed
 Ok
 == Ок
 
+Ok (%d)
+== Ок (%d)
+
 Open
 == Открыть
 
@@ -516,6 +650,9 @@ Quit
 
 Reason:
 == Причина:
+
+Record demo
+== Запись демо
 
 Red team
 == Красные
@@ -664,6 +801,9 @@ Standard gametype
 Standard map
 == Стандартная карта
 
+Stop record
+== Остановить запись
+
 Sudden Death
 == Быстрая смерть
 
@@ -691,8 +831,8 @@ Texture Compression
 The server is running a non-standard tuning on a pure game type.
 == Сервер запущен с нестандартными настройками на стандартном типе игры.
 
-Time limit
-== Лимит
+Time limit: %d min
+== Лимит: %d мин.
 
 Toggle group visibility
 == Переключить видимость группы
@@ -727,8 +867,14 @@ V-Sync
 Version
 == Версия
 
+Vote No
+== Против
+
 Vote no
 == Против
+
+Vote Yes
+== За
 
 Vote yes
 == За
@@ -796,142 +942,139 @@ ZO
 ##### needs translation #####
 
 Alpha value of the envelope
-== 
+== Прозрачность кривой
 
 Are you sure that you want to delete the demo?
-== 
+== Вы действительно хотите удалить эту демо?
 
 Aspect ratio
-== 
+== Соотношение сторон
 
 Blue value of the envelope
-== 
+== Значение синего у кривой
 
 Clip H
-== 
+== Высота обрезаемой области
 
 Clip W
-== 
+== Ширина обрезаемой области
 
 Clip X
-== 
+== Позиция слева у обрезаемой области
 
 Clip Y
-== 
+== Позиция сверху у обрезаемой области
 
 Color
-== 
+== Цвет
 
 Delete demo
-== 
+== Удалить
 
 Delete this envelope
-== 
+== Удалить кривую
 
 Down
-== 
+== Вниз
 
 Enable/disable group for saving
-== 
+== Разрешить/запретить сохранение группы
 
 Enable/disable layer for saving
-== 
+== Разрешить/запретить сохранение слоя
 
 File: %s
-== 
+== Файл: %s
 
 Folder
-== 
+== Папка
 
 Green value of the envelope
-== 
+== Значение зеленого у кривой
 
 Invalid Demo
-== 
+== Неправильное демо
 
 Left
-== 
+== Влево
 
 Left mouse to drag. Hold ctrl to be more precise. Hold shift to alter time point aswell. Right click to delete.
-== 
+== Левая клавиша для перемещения. Зажмите Ctrl для большей точности. Зажмите Shift для изменения момента времени. Правый клик для удаления.
 
 Load map
-== 
+== Загрузить карту
 
 New folder
-== 
+== Новая папка
 
 Para X
-== 
+== Пара. X
 
 Para Y
-== 
+== Пара. Y
 
 Parent Folder
-== 
+== Родительская папка
 
 Pos X
-== 
+== Поз. X
 
 Pos Y
-== 
+== Поз. Y
 
 Quads
-== 
+== Квады
 
 REC
-== 
+== ЗАПИСЬ
 
 Record demo
-== 
+== Запись демо
 
 Red value of the envelope
-== 
+== Значение красного у кривой
 
 Resizes the current Quad based on the aspect ratio of the image
-== 
+== Изменить размер квада под размер изображения
 
 Right
-== 
+== Вправо
 
 Rotation of the brush in degrees. Use left mouse button to drag and change the value. Hold shift to be more precise.
-== 
+== Поворот кисти в градусах. Левая клавиша для перемещения и изменения значения. Зажмите Shift для большей точности.
 
 Rotation of the envelope
-== 
+== Поворот кривой
 
 Shift
-== 
+== Смещение 
 
 Stop record
-== 
+== Остановить запись
 
 Tiles
-== 
-
-Time limit: %d min
-== 
+== Тайлы
 
 Up
-== 
+== Вверх
 
 Use Clipping
-== 
+== Обрезать
 
 Use left mouse button to drag and change the color value. Hold shift to be more precise.
-== 
+== Левая клавиша для перемещения и изменения цвета. Зажмите Shift для большей точности.
 
 Use left mouse button to drag and change the value. Hold shift to be more precise.
-== 
+== Левая клавиша для перемещения и изменения значения. Зажмите Shift для большей точности.
 
 X-axis of the envelope
-== 
+== Горизонталь кривой
 
 Y-axis of the envelope
-== 
+== Вертикаль кривой
 
 [HOME] Restore map focus
-== 
+== [HOME] Восстановить фокусировку карты
 
 ##### old translations #####
 

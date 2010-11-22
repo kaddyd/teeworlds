@@ -178,6 +178,15 @@ class CMenus : public CComponent
 	int m_DemolistSelectedIndex;
 	bool m_DemolistSelectedIsDir;
 	int m_DemolistStorageType;
+
+
+	// for auto-reconnect
+	int m_ReconnectTime;
+
+	// for download bar
+	int m_DownloadLastCheckTime;
+	unsigned long m_DownloadLastCheckSize;
+	float m_DownloadSpeed;
 	
 	void DemolistOnUpdate(bool Reset);
 	void DemolistPopulate();

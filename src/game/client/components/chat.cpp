@@ -20,7 +20,24 @@
 
 CChat::CChat()
 {
+	for (int i = 0; i < Z_ChatHistoryLinesCount; i++)
+	{
+		m_aHistory[i] = (char *)malloc(sizeof(m_aLines[0].m_aText));
+		m_aHistory[i][0] = 0;
+	}
+
+	m_aSavedLine = (char *)malloc(sizeof(m_aLines[0].m_aText));
+	m_aSavedLine[0] = 0;
+
 	OnReset();
+}
+
+CChat::~CChat()
+{
+	for (int i = 0; i < Z_ChatHistoryLinesCount; i++)
+		free(m_aHistory[i]);
+
+	free(m_aSavedLine);
 }
 
 void CChat::OnReset()
@@ -35,6 +52,8 @@ void CChat::OnReset()
 	m_Show = false;
 	m_InputUpdate = false;
 	m_ChatStringOffset = 0;
+
+	m_CurrentHistoryLine = -1;
 }
 
 void CChat::OnRelease()
@@ -96,13 +115,67 @@ bool CChat::OnInput(IInput::CEvent e)
 	{
 		m_Mode = MODE_NONE;
 		m_pClient->OnRelease();
+
+		m_CurrentHistoryLine = -1;
+		m_aSavedLine[0] = 0;
+	}
+	if((e.m_Flags&(IInput::FLAG_PRESS | IInput::FLAG_RELEASE)) && (e.m_Key == KEY_LCTRL || e.m_Key == KEY_RCTRL))
+	{
+		if (m_Mode == MODE_ALL)
+			m_Mode = MODE_TEAM;
+		else if (m_Mode == MODE_TEAM)
+			m_Mode = MODE_ALL;
+	}
+	if(e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_UP)
+	{
+		if (m_CurrentHistoryLine < 0 && m_aHistory[0][0] != 0)
+			str_copy(m_aSavedLine, m_Input.GetString(), sizeof(m_aLines[0].m_aText));
+
+		m_CurrentHistoryLine = clamp(m_CurrentHistoryLine +1, -1, Z_ChatHistoryLinesCount);
+			
+		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= Z_ChatHistoryLinesCount || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
+
+		if (m_CurrentHistoryLine < 0)
+			m_CurrentHistoryLine = -1;
+
+		if (m_CurrentHistoryLine >= 0 && m_aHistory[m_CurrentHistoryLine][0] != 0)
+			m_Input.Set(m_aHistory[m_CurrentHistoryLine]);
+	}
+	else if (e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_DOWN && m_CurrentHistoryLine >= 0)
+	{
+		m_CurrentHistoryLine = clamp(m_CurrentHistoryLine - 1, -1, Z_ChatHistoryLinesCount);
+
+		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= Z_ChatHistoryLinesCount || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
+
+		if (m_CurrentHistoryLine < 0)
+		{
+			m_Input.Set(m_aSavedLine);
+		} else {
+			m_Input.Set(m_aHistory[m_CurrentHistoryLine]);
+		}
 	}
 	else if(e.m_Flags&IInput::FLAG_PRESS && (e.m_Key == KEY_RETURN || e.m_Key == KEY_KP_ENTER))
 	{
 		if(m_Input.GetString()[0])
+		{
 			Say(m_Mode == MODE_ALL ? 0 : 1, m_Input.GetString());
+
+			if (str_comp(m_Input.GetString(), m_aHistory[0]) != 0)
+			{
+				char * lastLine = m_aHistory[Z_ChatHistoryLinesCount - 1];
+
+				for (int i = Z_ChatHistoryLinesCount - 2; i >= 0; i--)
+					m_aHistory[i + 1] = m_aHistory[i];
+
+				str_copy(lastLine, m_Input.GetString(), sizeof(m_aLines[0].m_aText));
+				m_aHistory[0] = lastLine;
+			}
+		}
 		m_Mode = MODE_NONE;
 		m_pClient->OnRelease();
+
+		m_CurrentHistoryLine = -1;
+		m_aSavedLine[0] = 0;
 	}
 	else
 	{

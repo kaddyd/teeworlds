@@ -28,11 +28,11 @@ polish
 portuguese
 == Português
 
-russian
-== Русский
-
 serbian
 == Srpski
 
 swedish
 == Svenska
+
+russian
+== Русский

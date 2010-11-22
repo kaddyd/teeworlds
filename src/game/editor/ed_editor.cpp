@@ -774,7 +774,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
 	{
 		// do add button
 		TB_Top.VSplitLeft(10.0f, &Button, &TB_Top);
-		TB_Top.VSplitLeft(60.0f, &Button, &TB_Top);
+		TB_Top.VSplitLeft(90.0f, &Button, &TB_Top);
 		static int s_NewButton = 0;
 
 		CLayerQuads *pQLayer = (CLayerQuads *)GetSelectedLayerType(0, LAYERTYPE_QUADS);
@@ -801,7 +801,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
     
 	// tile manipulation
 	{
-		TB_Bottom.VSplitLeft(40.0f, &Button, &TB_Bottom);
+		TB_Bottom.VSplitLeft(90.0f, &Button, &TB_Bottom);
 		static int s_BorderBut = 0;
 		CLayerTiles *pT = (CLayerTiles *)GetSelectedLayerType(0, LAYERTYPE_TILES);
 		
@@ -815,7 +815,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
 	TB_Bottom.VSplitLeft(5.0f, 0, &TB_Bottom);
 
 	// refocus button
-	TB_Bottom.VSplitLeft(50.0f, &Button, &TB_Bottom);
+	TB_Bottom.VSplitLeft(90.0f, &Button, &TB_Bottom);
 	static int s_RefocusButton = 0;
 	if(DoButton_Editor(&s_RefocusButton, Localize("Refocus"), m_WorldOffsetX&&m_WorldOffsetY?0:-1, &Button, 0, Localize("[HOME] Restore map focus")) || Input()->KeyDown(KEY_HOME))
 	{

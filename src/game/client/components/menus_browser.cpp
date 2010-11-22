@@ -706,7 +706,7 @@ void CMenus::RenderServerbrowser(CUIRect MainView)
 
 		CUIRect Button;
 		ButtonBox.HSplitBottom(ms_ButtonHeight, &ButtonBox, &Button);
-		Button.VSplitRight(120.0f, 0, &Button);
+//		Button.VSplitRight(120.0f, 0, &Button);
 		Button.VMargin(2.0f, &Button);
 		//button.VMargin(2.0f, &button);
 		static int s_JoinButton = 0;

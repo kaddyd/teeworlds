@@ -7,6 +7,38 @@
 #include "engine.h"
 #include "config.h"
 
+void ZPack2ConvertCyrillic(char * str, bool decode)
+{
+        unsigned int len = str_length(str);
+        if (len == 0) return;
+        if (!decode)
+        {
+                unsigned char * pt = (unsigned char *)str, * t = (unsigned char *)str;
+                int ch;
+                while (( ch = str_utf8_decode((const char **)(&t)) ) != 0)
+                {
+                        if (ch >= 1039 && ch <= 1039 + 64)
+                        {
+                                pt[0] = 175;
+                                pt[1] = ch - 1039 + 255 - 64;
+                        }
+                        pt = t;
+                }
+        } else {
+                unsigned char * t = (unsigned char *)str;
+                while (t[0])
+                {
+                        if (t[0] == 175)
+                        {
+                                str_utf8_encode((char *)t, (int)t[1] + 1039 - 255 + 64);
+                                t++;
+                                if (!t[0]) break;
+                        }
+                        t++;
+                }
+        }
+}
+
 void CPacker::Reset()
 {
 	m_Error = 0;
@@ -33,6 +65,8 @@ void CPacker::AddString(const char *pStr, int Limit)
 {
 	if(m_Error)
 		return;
+
+	char * Ptr = (char *)m_pCurrent;
 	
 	//
 	if(Limit > 0)
@@ -64,6 +98,9 @@ void CPacker::AddString(const char *pStr, int Limit)
 		}
 		*m_pCurrent++ = 0;
 	}
+
+	if (g_Config.m_NetZPack2Cyrillic)
+		ZPack2ConvertCyrillic(Ptr, true);
 }
 
 void CPacker::AddRaw(const void *pData, int Size)
@@ -131,6 +168,9 @@ const char *CUnpacker::GetString(int SanitizeType)
 		}
 	}
 	m_pCurrent++;
+
+	if (g_Config.m_NetZPack2Cyrillic)
+		ZPack2ConvertCyrillic(pPtr, true);
 	
 	// sanitize all strings
 	if(SanitizeType&SANITIZE)

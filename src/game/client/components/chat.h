@@ -5,6 +5,8 @@
 #include <game/client/component.h>
 #include <game/client/lineinput.h>
 
+#include <game/zpack.h>
+
 class CChat : public CComponent
 {
 	CLineInput m_Input;
@@ -28,6 +30,10 @@ class CChat : public CComponent
 	CLine m_aLines[MAX_LINES];
 	int m_CurrentLine;
 
+	char * m_aHistory[Z_ChatHistoryLinesCount];
+	char * m_aSavedLine;
+	int m_CurrentHistoryLine;
+
 	// chat
 	enum
 	{
@@ -49,6 +55,7 @@ class CChat : public CComponent
 	
 public:
 	CChat();
+	~CChat();
 
 	bool IsActive() const { return m_Mode != MODE_NONE; }
 	

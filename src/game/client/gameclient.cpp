@@ -243,7 +243,7 @@ void CGameClient::OnInit()
 	//default_font = gfx_font_load("data/fonts/sazanami-gothic.ttf");
 
 	char aFilename[512];
-	IOHANDLE File = Storage()->OpenFile("fonts/DejaVuSans.ttf", IOFLAG_READ, IStorage::TYPE_ALL, aFilename, sizeof(aFilename));
+	IOHANDLE File = Storage()->OpenFile("fonts/DroidSansFallback.ttf", IOFLAG_READ, IStorage::TYPE_ALL, aFilename, sizeof(aFilename));
 	if(File)
 		io_close(File);
 	pDefaultFont = TextRender()->LoadFont(aFilename);
@@ -286,11 +286,6 @@ void CGameClient::OnInit()
 				gs_LoadCurrent++;
 		}
 	}
-		
-	/*if(config.cl_threadsoundloading)
-		thread_create(load_sounds_thread, 0);
-	else
-		load_sounds_thread((void*)1);*/
 
 	for(int i = 0; i < m_All.m_Num; i++)
 		m_All.m_paComponents[i]->OnReset();

@@ -6,3 +6,20 @@ config.lua
 
 teeworlds_d
 teeworlds_srv_d
+
+crapnet
+crapnet_d
+dilate
+dilate_d
+fake_server
+fake_server_d
+map_resave
+map_resave_d
+mastersrv
+mastersrv_d
+packetgen
+packetgen_d
+tileset_borderfix
+tileset_borderfix_d
+versionsrv
+versionsrv_d
