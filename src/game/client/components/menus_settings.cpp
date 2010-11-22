@@ -603,6 +603,32 @@ void CMenus::RenderSettingsGraphics(CUIRect MainView)
 		*pColorSlider[s] = (int)(k*255.0f);
 		UI()->DoLabel(&Text, paLabels[s], 15.0f, -1);
 	}
+	
+	const char * Backgrounds[] = {
+		"Old",
+		"Grass",
+		"Jungle",
+		"Desert",
+		"Winter"
+	};
+	
+	//MainView.HSplitTop(19.0f, &Button, &MainView);
+	//Button.w -= 5.0f;
+	Button = MainView;
+	Button.HSplitTop(19.0f, 0, &Button);
+	Button.w -= 5.0f;
+	
+	static float s_BackgroundScrollValue = 0;
+	
+	UiDoListboxStart(&s_BackgroundScrollValue, &Button, 19.0f, Localize("Background"), "", 5, 1, g_Config.m_UiNewBackground, s_BackgroundScrollValue);
+	
+	for (int i = 0; i < 5; i++)
+	{
+		CListboxItem Item = UiDoListboxNextItem(&Backgrounds[i], g_Config.m_UiNewBackground == i);
+		UI()->DoLabel(&Item.m_Rect, Localize(Backgrounds[i]), 15.0f, -1);
+	}
+
+	g_Config.m_UiNewBackground = UiDoListboxEnd(&s_BackgroundScrollValue, 0);
 }
 
 void CMenus::RenderSettingsSound(CUIRect MainView)

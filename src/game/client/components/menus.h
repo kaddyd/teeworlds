@@ -227,6 +227,8 @@ class CMenus : public CComponent
 	void RenderSettings(CUIRect MainView);
 	
 	void SetActive(bool Active);
+	
+	void RenderTiles(float x, float y, int tx, int ty, int tw, int th, float frac, float nudge); // for new background in RenderBackground
 public:
 	void RenderBackground();
 
