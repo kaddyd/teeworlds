@@ -510,6 +510,14 @@ public:
 		TextEx(&Cursor, pText, Length);
 		return Cursor.m_X;
 	}
+
+	virtual float TextHeight(void *pFontSetV, float Size, const char *pText, int Length)
+	{
+		CTextCursor Cursor;
+		SetCursor(&Cursor, 0, 0, Size, 0);
+		TextEx(&Cursor, pText, Length);
+		return Cursor.m_Y;
+	}
 	
 	virtual int TextLineCount(void *pFontSetV, float Size, const char *pText, float LineWidth)
 	{

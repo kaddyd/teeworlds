@@ -845,6 +845,7 @@ int CMenus::Render()
 		char aBuf[128];
 		const char *pTitle = "";
 		const char *pExtraText = "";
+		const char *pExtraText2 = "";
 		const char *pButtonText = "";
 		int ExtraAlign = 0;
 		bool bProgressBar = false;
@@ -896,11 +897,13 @@ int CMenus::Render()
 					double remaining = abs( (Client()->MapDownloadTotalsize() - Client()->MapDownloadAmount()) / m_DownloadSpeed );
 					str_format(aBuf, sizeof(aBuf), Localize("%d/%d KiB (%.1f KiB/sec)"), Client()->MapDownloadAmount() / 1024, Client()->MapDownloadTotalsize() / 1024, m_DownloadSpeed / 1024.0f);
 
-					char * aBufEnd = aBuf + str_length(aBuf);
-					char * aBufMax = aBuf + sizeof(aBuf);
+					char * pBufEnd = aBuf + str_length(aBuf) + 1;
+					char * pBufMax = aBuf + sizeof(aBuf);
+
+					pExtraText2 = pBufEnd;
                                                                       
-					str_format(aBufEnd, aBufMax - aBufEnd, "\n\n%s ", Localize("Please wait"));
-					while (aBufEnd[0]) aBufEnd++;
+					str_format(pBufEnd, pBufMax - pBufEnd, "\n\n%s ", Localize("Please wait"));
+					while (pBufEnd[0]) pBufEnd++;
 
 					if (remaining > 60.0)
 					{
@@ -908,17 +911,17 @@ int CMenus::Render()
 						int seconds = (int)remaining % 60;
 
 						str_format(aBuf2, sizeof(aBuf2), Localize("%d minute(s)"), minutes);
-						str_format(aBufEnd, aBufMax - aBufEnd, "%s ", Localize(aBuf2)); // localize number texts
-						while (aBufEnd[0]) aBufEnd++;
+						str_format(pBufEnd, pBufMax - pBufEnd, "%s ", Localize(aBuf2)); // localize number texts
+						while (pBufEnd[0]) pBufEnd++;
 
 						if (seconds)
 						{
 							str_format(aBuf2, sizeof(aBuf2), Localize("%d second(s)"), seconds);
-							str_format(aBufEnd, aBufMax - aBufEnd, "%s", Localize(aBuf2)); // localize number texts
+							str_format(pBufEnd, pBufMax - pBufEnd, "%s", Localize(aBuf2)); // localize number texts
 						}
 					} else {
 						str_format(aBuf2, sizeof(aBuf2), Localize("%d second(s)"), (int)remaining);
-						str_format(aBufEnd, aBufMax - aBufEnd, "%s", Localize(aBuf2)); // localize number texts
+						str_format(pBufEnd, pBufMax - pBufEnd, "%s", Localize(aBuf2)); // localize number texts
 					}
 				}
 				pExtraText = aBuf;
@@ -999,9 +1002,23 @@ int CMenus::Render()
 		Part.VMargin(20.f, &Part);
 		
 		if(ExtraAlign == -1)
+		{
 			UI()->DoLabel(&Part, pExtraText, 20.f, -1, (int)Part.w);
+
+			CUIRect Extra2 = Part;
+
+			Extra2.VMargin(TextRender()->TextHeight(0, 20.0f, pExtraText, (int)Part.w), &Extra2);
+			UI()->DoLabel(&Extra2, pExtraText2, 20.0f, -1, (int)Part.w);
+		}
 		else
+		{
 			UI()->DoLabel(&Part, pExtraText, 20.f, 0, -1);
+
+			CUIRect Extra2 = Part;
+
+			Extra2.VMargin(TextRender()->TextHeight(0, 20.0f, pExtraText, -1), &Extra2);
+			UI()->DoLabel(&Extra2, pExtraText2, 20.0f, 0, -1);
+		}
 
 		if(bProgressBar)
 		{
@@ -1010,10 +1027,14 @@ int CMenus::Render()
 			Rect.y = Screen.h - 225.0f;
 			Rect.w = Screen.w - 350.0f;
 			Rect.h = 25.0f;
+
 			RenderTools()->DrawUIRect(&Rect, vec4(1.0f, 1.0f, 1.0f, 0.25f), CUI::CORNER_ALL, 5.0f);
 
-			Rect.w *= fProgress;
-			RenderTools()->DrawUIRect(&Rect, vec4(1.0f, 1.0f, 1.0f, 0.5f), CUI::CORNER_ALL, 5.0f);
+			if (fProgress > 0)
+			{
+				Rect.w *= clamp(fProgress, 0.0f, 1.0f);
+				RenderTools()->DrawUIRect(&Rect, vec4(1.0f, 1.0f, 1.0f, 0.5f), CUI::CORNER_ALL, 5.0f);
+			}
 		}
 
 		if(m_Popup == POPUP_QUIT)
