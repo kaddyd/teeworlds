@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 
+#include <string.h>
 #include <engine/graphics.h>
 #include <engine/textrender.h>
 #include <engine/keys.h>
@@ -55,6 +56,10 @@ void CChat::OnReset()
 	m_ChatStringOffset = 0;
 
 	m_CurrentHistoryLine = -1;
+	
+	m_aCompletionMiddle = false;
+	m_aCompletionBuffer[0] = 0;
+	m_CompletionChosen = -1;
 }
 
 void CChat::OnRelease()
@@ -178,8 +183,35 @@ bool CChat::OnInput(IInput::CEvent e)
 		m_CurrentHistoryLine = -1;
 		m_aSavedLine[0] = 0;
 	}
+	else if(e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_TAB)
+	{
+		m_CompletionChosen++;
+		m_CompletionEnumerationCount = 0;
+		PossibleNames(m_aCompletionBuffer, m_aCompletionMiddle);
+		
+		// handle wrapping
+		if(m_CompletionEnumerationCount && m_CompletionChosen >= m_CompletionEnumerationCount)
+		{
+			m_CompletionChosen %= m_CompletionEnumerationCount;
+			m_CompletionEnumerationCount = 0;
+			PossibleNames(m_aCompletionBuffer, m_aCompletionMiddle);
+		}
+	}
 	else
 	{
+		if(e.m_Flags&IInput::FLAG_PRESS)
+		{
+			m_CompletionChosen = -1;
+			const char * aBuf = strrchr(m_Input.GetString(), ' ');
+			if (aBuf)
+			{
+				strncpy(m_aCompletionBuffer, aBuf+1, strlen(aBuf));
+			} else {
+				str_copy(m_aCompletionBuffer, m_Input.GetString(), sizeof(m_aCompletionBuffer));
+			}
+			m_aCompletionMiddle = aBuf;
+		}
+		
 		m_OldChatStringLength = m_Input.GetLength();
 		m_Input.ProcessInput(e);
 		m_InputUpdate = true;
@@ -409,4 +441,38 @@ void CChat::Say(int Team, const char *pLine)
 	Msg.m_Team = Team;
 	Msg.m_pMessage = pLine;
 	Client()->SendPackMsg(&Msg, MSGFLAG_VITAL);
+}
+
+void CChat::PossibleNames(const char *pStr, const bool inmiddle)
+{
+	for(int i = 0; i < Client()->SnapNumItems(IClient::SNAP_CURRENT); i++)
+	{
+		IClient::CSnapItem Item;
+		const void *pData = Client()->SnapGetItem(IClient::SNAP_CURRENT, i, &Item);
+
+		if(Item.m_Type == NETOBJTYPE_PLAYERINFO)
+		{
+			const CNetObj_PlayerInfo *pInfo = (const CNetObj_PlayerInfo *)pData;
+			
+			if(str_find_nocase(m_pClient->m_aClients[pInfo->m_ClientId].m_aName, pStr))
+			{
+				if(m_CompletionChosen == m_CompletionEnumerationCount)
+				{
+					if(inmiddle)
+					{
+						char aSt[512];
+						const char * pBuf = strrchr(m_Input.GetString(), ' ');
+						strncpy(aSt, m_Input.GetString(), pBuf - m_Input.GetString() + 1);
+						strcat(aSt, m_pClient->m_aClients[pInfo->m_ClientId].m_aName);
+						m_Input.Set(aSt);
+					} else {
+						char aBuf[128];
+						str_format(aBuf, sizeof(aBuf), "%s:", m_pClient->m_aClients[pInfo->m_ClientId].m_aName);
+						m_Input.Set(aBuf);
+					}
+				}
+				m_CompletionEnumerationCount++;
+			}
+		}
+	}
 }
