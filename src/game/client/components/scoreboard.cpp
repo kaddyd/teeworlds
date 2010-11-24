@@ -137,6 +137,16 @@ void CScoreboard::RenderScoreboard(float x, float y, float w, int Team, const ch
 			pTitle = Localize("Game over");
 		else
 			pTitle = Localize("Score board");
+	} else {
+		if (g_Config.m_ClColorNicks && m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS && Team >= 0)
+		{
+			if (Team)
+			{
+				TextRender()->TextColor(0.7f, 0.7f, 1.0f, 1.0f);
+			} else {
+				TextRender()->TextColor(1.0f, 0.5f, 0.5f, 1.0f);
+			}
+		}
 	}
 
 	float tw = TextRender()->TextWidth(0, 48, pTitle, -1);
