@@ -138,6 +138,12 @@ int CControls::SnapInput(int *pData)
 			
 		mem_copy(pData, &m_InputData, sizeof(m_InputData));
 
+		if (m_pClient->m_Snap.m_Spectate && !m_pClient->m_Freeview)
+		{
+			m_TargetPos = m_MousePos;
+			Send = true;
+		}
+
 		// send once a second just to be sure
 		if(time_get() > LastSendTime + time_freq())
 			Send = true;
@@ -231,10 +237,15 @@ void CControls::ClampMousePos()
 
 	if(m_pClient->m_Snap.m_Spectate)
 	{
-		if(m_MousePos.x < 200.0f) m_MousePos.x = 200.0f;
-		if(m_MousePos.y < 200.0f) m_MousePos.y = 200.0f;
-		if(m_MousePos.x > Collision()->GetWidth()*32-200.0f) m_MousePos.x = Collision()->GetWidth()*32-200.0f;
-		if(m_MousePos.y > Collision()->GetHeight()*32-200.0f) m_MousePos.y = Collision()->GetHeight()*32-200.0f;
+		if (m_pClient->m_Freeview)
+		{
+			if(m_MousePos.x < 200.0f) m_MousePos.x = 200.0f;
+			if(m_MousePos.y < 200.0f) m_MousePos.y = 200.0f;
+			if(m_MousePos.x > Collision()->GetWidth()*32-200.0f) m_MousePos.x = Collision()->GetWidth()*32-200.0f;
+			if(m_MousePos.y > Collision()->GetHeight()*32-200.0f) m_MousePos.y = Collision()->GetHeight()*32-200.0f;
+		} else {
+			m_MousePos = m_pClient->m_SpectatePos;
+		}
 		
 		m_TargetPos = m_MousePos;
 	}

@@ -304,7 +304,7 @@ void CGameClient::DispatchInput()
 	// handle mouse movement
 	float x = 0.0f, y = 0.0f;
 	Input()->MouseRelative(&x, &y);
-	if(x != 0.0f || y != 0.0f)
+	if(x != 0.0f || y != 0.0f || !m_Freeview)
 	{
 		for(int h = 0; h < m_Input.m_Num; h++)
 		{
@@ -335,7 +335,33 @@ void CGameClient::DispatchInput()
 
 int CGameClient::OnSnapInput(int *pData)
 {
-	return m_pControls->SnapInput(pData);
+	int val = m_pControls->SnapInput(pData);
+	if (val && m_Snap.m_Spectate)
+	{
+		CNetObj_PlayerInput *inp = (CNetObj_PlayerInput *)pData;
+		static bool s_LastFire = false, s_LastHook = false;
+
+		if ((inp->m_Fire & 1) && !s_LastFire)
+		{
+			FindNextSpectableClientId();
+			s_LastFire = true;
+		} else {
+		       	if (!(inp->m_Fire & 1) && s_LastFire)
+				s_LastFire = false;
+		}
+
+		if (inp->m_Hook && !s_LastHook)
+		{
+			m_Freeview = !m_Freeview;
+			if (!m_Freeview)
+				FindNextSpectableClientId();
+			s_LastHook = true;
+		} else {
+			if ((!inp->m_Hook) && s_LastHook)
+				s_LastHook = false;
+		}
+	}
+	return val;
 }
 
 void CGameClient::OnConnected()
@@ -359,6 +385,9 @@ void CGameClient::OnConnected()
 	
 	// send the inital info
 	SendInfo(true);
+
+	m_Freeview = true;
+	m_SpectateClientId = -1;
 }
 
 void CGameClient::OnReset()
@@ -402,6 +431,24 @@ void CGameClient::UpdateLocalCharacterPos()
 		m_LocalCharacterPos = mix(
 			vec2(m_Snap.m_pLocalPrevCharacter->m_X, m_Snap.m_pLocalPrevCharacter->m_Y),
 			vec2(m_Snap.m_pLocalCharacter->m_X, m_Snap.m_pLocalCharacter->m_Y), Client()->IntraGameTick());
+	}
+
+	if (m_SpectateClientId == -1)
+		m_Freeview = true;
+
+	if (m_Snap.m_Spectate && !m_Freeview)
+	{
+		if (!m_Snap.m_aCharacters[m_SpectateClientId].m_Active || m_aClients[m_SpectateClientId].m_Team == -1)
+		{
+			FindNextSpectableClientId();
+			return;
+		}
+
+		m_SpectatePos = mix(
+					vec2(m_Snap.m_aCharacters[m_SpectateClientId].m_Prev.m_X, m_Snap.m_aCharacters[m_SpectateClientId].m_Prev.m_Y),
+					vec2(m_Snap.m_aCharacters[m_SpectateClientId].m_Cur.m_X, m_Snap.m_aCharacters[m_SpectateClientId].m_Cur.m_Y),
+					Client()->IntraGameTick()
+				);
 	}
 }
 
@@ -543,6 +590,17 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker)
 	if(MsgId == NETMSGTYPE_SV_READYTOENTER)
 	{
 		Client()->EnterGame();
+	}
+	else if(MsgId == NETMSGTYPE_SV_KILLMSG)
+	{
+		CNetMsg_Sv_KillMsg *pMsg = (CNetMsg_Sv_KillMsg *)pRawMsg;
+		if (!m_Freeview)
+		{
+			if (pMsg->m_Victim == m_SpectateClientId)
+			{
+				m_SpectateClientId = pMsg->m_Killer;
+			}
+		}
 	}
 	else if (MsgId == NETMSGTYPE_SV_EMOTICON)
 	{
@@ -1006,6 +1064,42 @@ void CGameClient::ConchainSpecialInfoupdate(IConsole::IResult *pResult, void *pU
 	pfnCallback(pResult, pCallbackUserData);
 	if(pResult->NumArguments())
 		((CGameClient*)pUserData)->SendInfo(false);
+}
+
+void CGameClient::FindNextSpectableClientId()
+{
+	int Next = (m_SpectateClientId + 1) % MAX_CLIENTS;
+	int Prev = Next;
+
+	while (!m_Snap.m_aCharacters[Next].m_Active || m_aClients[Next].m_Team == -1)
+	{
+		Next = (Next + 1) % MAX_CLIENTS;
+		if (Next == Prev)
+		{
+			if (m_Snap.m_NumPlayers <= 1)
+			{
+				m_Freeview = true;
+				m_SpectateClientId = -1;
+			} else {
+				CMapItemLayerTilemap * pTMap = (CMapItemLayerTilemap *)Layers()->GameLayer();
+
+				vec2 center(pTMap->m_Width * 0.5f, pTMap->m_Height * 0.5f);
+				center *= 32.0f;
+
+				float len = min(pTMap->m_Width, pTMap->m_Height) * 32 * 0.4f;
+
+				vec2 target(sinf( Client()->LocalTime() ), cosf( Client()->LocalTime() ));
+				target *= len;
+				target += center;
+
+				m_SpectatePos = (m_SpectatePos * 0.95f + target * 0.05f);
+			}
+			return;
+		}
+	}
+
+	m_SpectateClientId = Next;
+	m_Freeview = false;
 }
 
 IGameClient *CreateGameClient()

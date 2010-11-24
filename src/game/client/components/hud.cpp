@@ -28,6 +28,18 @@ void CHud::OnReset()
 {
 }
 
+void CHud::RenderSpectate()
+{
+	if (m_pClient->m_Freeview)
+	{
+		TextRender()->Text(0, 4 * Graphics()->ScreenAspect(), 4, 8, Localize("Freeview"), -1);
+	} else {
+		char aBuf[256];
+		str_format(aBuf, sizeof(aBuf), Localize("Following: %s"), m_pClient->m_aClients[m_pClient->m_SpectateClientId].m_aName);
+		TextRender()->Text(0, 4 * Graphics()->ScreenAspect(), 4, 8, aBuf, -1);
+	}
+}
+
 void CHud::RenderGameTimer()
 {
 	float Half = 300.0f*Graphics()->ScreenAspect()/2.0f;
@@ -342,6 +354,10 @@ void CHud::OnRender()
 		RenderConnectionWarning();
 	RenderTeambalanceWarning();
 	RenderVoting();
+
+	if (m_pClient->m_Snap.m_Spectate && (m_pClient->m_Snap.m_pGameobj && !m_pClient->m_Snap.m_pGameobj->m_GameOver))
+		RenderSpectate();
+
 	RenderCursor();
 }
 

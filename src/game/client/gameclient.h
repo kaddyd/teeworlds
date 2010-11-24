@@ -166,6 +166,13 @@ public:
 	
 	void OnReset();
 
+	// Spectators following
+	bool m_Freeview;
+	int m_SpectateClientId;
+	vec2 m_SpectatePos;
+
+	void FindNextSpectableClientId();
+
 	// hooks
 	virtual void OnConnected();
 	virtual void OnRender();

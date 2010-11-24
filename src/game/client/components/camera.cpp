@@ -23,12 +23,17 @@ void CCamera::OnRender()
 	// update camera center		
 	if(m_pClient->m_Snap.m_Spectate)
 	{
-		if(!m_WasSpectator)
+		if (m_pClient->m_Freeview)
 		{
-			m_pClient->m_pControls->ClampMousePos();
-			m_WasSpectator = true;
+			if(!m_WasSpectator)
+			{
+				m_pClient->m_pControls->ClampMousePos();
+				m_WasSpectator = true;
+			}
+			m_Center = m_pClient->m_pControls->m_MousePos;
+		} else {
+			m_Center = m_pClient->m_SpectatePos;
 		}
-		m_Center = m_pClient->m_pControls->m_MousePos;
 	}
 	else
 	{
