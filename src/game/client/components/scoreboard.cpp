@@ -12,6 +12,7 @@
 #include <game/client/components/motd.h>
 #include <game/localization.h>
 #include "scoreboard.h"
+#include "hud.h"
 
 
 CScoreboard::CScoreboard()
@@ -235,6 +236,13 @@ void CScoreboard::RenderScoreboard(float x, float y, float w, int Team, const ch
 		float Width;
 		const float ScoreWidth = 60.0f;
 		const float PingWidth = 60.0f;
+
+		if (g_Config.m_ClColorNicks)
+		{
+			vec3 color = m_pClient->m_pHud->GetNickColor(pInfo);
+			TextRender()->TextColor(color.r, color.g, color.b, 1.0f);
+		}
+
 		str_format(aBuf, sizeof(aBuf), "%d", clamp(pInfo->m_Score, -9999, 9999));
 		while((Width = TextRender()->TextWidth(0, FontSizeResize, aBuf, -1)) > ScoreWidth)
 			--FontSizeResize;
@@ -275,6 +283,8 @@ void CScoreboard::RenderScoreboard(float x, float y, float w, int Team, const ch
 		
 		y += LineHeight;
 	}
+
+	TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void CScoreboard::RenderRecordingNotification(float x)
