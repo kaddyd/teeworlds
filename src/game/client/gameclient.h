@@ -214,4 +214,6 @@ public:
 
 extern const char *Localize(const char *Str);
 
+extern CGameClient g_GameClient;
+
 #endif

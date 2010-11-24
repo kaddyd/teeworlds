@@ -12,6 +12,7 @@
 #include <game/layers.h>
 #include "animstate.h"
 #include "render.h"
+#include "gameclient.h"
 
 static float gs_SpriteWScale;
 static float gs_SpriteHScale;
@@ -291,6 +292,14 @@ void CRenderTools::MapscreenToWorld(float CenterX, float CenterY, float Parallax
 	CenterY *= ParallaxY;
 	Width *= Zoom;
 	Height *= Zoom;
+
+	if ((g_GameClient.m_Snap.m_pLocalInfo && g_GameClient.m_Snap.m_pLocalInfo->m_Team < 0) || g_GameClient.Client()->State() == IClient::STATE_DEMOPLAYBACK)
+	{
+		float SpecZoom = g_Config.m_GfxZoom * 0.01f;
+		Width /= SpecZoom;
+		Height /= SpecZoom;
+	}
+
 	pPoints[0] = OffsetX+CenterX-Width/2;
 	pPoints[1] = OffsetY+CenterY-Height/2;
 	pPoints[2] = pPoints[0]+Width;

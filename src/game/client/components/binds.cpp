@@ -113,7 +113,11 @@ void CBinds::SetDefaults()
 	Bind('y', "chat team");	
 
 	Bind(KEY_F3, "vote yes");
-	Bind(KEY_F4, "vote no");	
+	Bind(KEY_F4, "vote no");
+
+	Bind(KEY_KP_PLUS, "zoom_in");
+	Bind(KEY_KP_MINUS, "zoom_out");
+	Bind(KEY_KP_MULTIPLY, "gfx_zoom 100");
 }
 
 void CBinds::OnConsoleInit()
