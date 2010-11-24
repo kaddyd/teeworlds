@@ -4,6 +4,8 @@ objs
 datasrc/*.pyc
 config.lua
 
+teeworlds
+teeworlds_srv
 teeworlds_d
 teeworlds_srv_d
 
@@ -29,3 +31,6 @@ bam.exe
 *.pdb
 *.res
 *.dll
+
+*~
+*.swp
