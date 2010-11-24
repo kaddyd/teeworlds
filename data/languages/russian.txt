@@ -240,6 +240,9 @@ Color TO
 Color+
 == Цвет+
 
+Color nicks
+== Цветные ники
+
 Compatible version
 == Совместимая версия
 
