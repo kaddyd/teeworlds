@@ -22,7 +22,7 @@
 
 CChat::CChat()
 {
-	for (int i = 0; i < Z_ChatHistoryLinesCount; i++)
+	for (int i = 0; i < MAX_HISTORY_LINES; i++)
 	{
 		m_aHistory[i] = (char *)malloc(sizeof(m_aLines[0].m_aText));
 		m_aHistory[i][0] = 0;
@@ -36,7 +36,7 @@ CChat::CChat()
 
 CChat::~CChat()
 {
-	for (int i = 0; i < Z_ChatHistoryLinesCount; i++)
+	for (int i = 0; i < MAX_HISTORY_LINES; i++)
 		free(m_aHistory[i]);
 
 	free(m_aSavedLine);
@@ -137,9 +137,9 @@ bool CChat::OnInput(IInput::CEvent e)
 		if (m_CurrentHistoryLine < 0 && m_aHistory[0][0] != 0)
 			str_copy(m_aSavedLine, m_Input.GetString(), sizeof(m_aLines[0].m_aText));
 
-		m_CurrentHistoryLine = clamp(m_CurrentHistoryLine +1, -1, Z_ChatHistoryLinesCount);
+		m_CurrentHistoryLine = clamp<int>(m_CurrentHistoryLine +1, -1, MAX_HISTORY_LINES);
 			
-		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= Z_ChatHistoryLinesCount || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
+		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= MAX_HISTORY_LINES || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
 
 		if (m_CurrentHistoryLine < 0)
 			m_CurrentHistoryLine = -1;
@@ -149,9 +149,9 @@ bool CChat::OnInput(IInput::CEvent e)
 	}
 	else if (e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_DOWN && m_CurrentHistoryLine >= 0)
 	{
-		m_CurrentHistoryLine = clamp(m_CurrentHistoryLine - 1, -1, Z_ChatHistoryLinesCount);
+		m_CurrentHistoryLine = clamp<int>(m_CurrentHistoryLine - 1, -1, MAX_HISTORY_LINES);
 
-		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= Z_ChatHistoryLinesCount || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
+		while ((m_CurrentHistoryLine >= 0) && (m_CurrentHistoryLine >= MAX_HISTORY_LINES || m_aHistory[m_CurrentHistoryLine][0] == 0)) m_CurrentHistoryLine--;
 
 		if (m_CurrentHistoryLine < 0)
 		{
@@ -168,9 +168,9 @@ bool CChat::OnInput(IInput::CEvent e)
 
 			if (str_comp(m_Input.GetString(), m_aHistory[0]) != 0)
 			{
-				char * lastLine = m_aHistory[Z_ChatHistoryLinesCount - 1];
+				char * lastLine = m_aHistory[MAX_HISTORY_LINES - 1];
 
-				for (int i = Z_ChatHistoryLinesCount - 2; i >= 0; i--)
+				for (int i = MAX_HISTORY_LINES - 2; i >= 0; i--)
 					m_aHistory[i + 1] = m_aHistory[i];
 
 				str_copy(lastLine, m_Input.GetString(), sizeof(m_aLines[0].m_aText));

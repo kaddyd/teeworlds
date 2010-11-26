@@ -26,7 +26,6 @@
 #include <mastersrv/mastersrv.h>
 
 #include <time.h>
-#include <game/zpack.h>
 #include <game/client/animstate.h>
 
 vec4 CMenus::ms_GuiColor;
@@ -791,6 +790,11 @@ int CMenus::Render()
 		ms_ColorTabbarInactive = ms_ColorTabbarInactiveOutgame;
 		ms_ColorTabbarActive = ms_ColorTabbarActiveOutgame;
 	}
+
+	if (m_Popup != POPUP_DISCONNECTED)
+	{
+		m_ReconnectTime = 0;
+	}
 	
 	CUIRect TabBar;
 	CUIRect MainView;
@@ -850,7 +854,7 @@ int CMenus::Render()
 		int ExtraAlign = 0;
 		bool bProgressBar = false;
 		float fProgress = 0.0f;
-		
+
 		if(m_Popup == POPUP_MESSAGE)
 		{
 			pTitle = m_aMessageTopic;
@@ -939,14 +943,14 @@ int CMenus::Render()
 				int currTime = (int)time(0);
 				if (!m_ReconnectTime)
 				{
-					m_ReconnectTime = currTime + Z_ClReconnectionTime;
+					m_ReconnectTime = currTime + RECONNECTION_TIME;
 				}
 				else if (currTime > m_ReconnectTime)
 				{
 					Client()->Connect(g_Config.m_UiServerAddress);
 					m_ReconnectTime = 0;
 				} else {
-					str_format(aBuf, sizeof(aBuf), Localize("Ok (%d)"), clamp(m_ReconnectTime - currTime, 0, Z_ClReconnectionTime));
+					str_format(aBuf, sizeof(aBuf), Localize("Ok (%d)"), clamp<unsigned long>(m_ReconnectTime - currTime, 0, RECONNECTION_TIME));
 					pButtonText = aBuf;
 				}
 			} else {

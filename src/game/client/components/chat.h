@@ -5,8 +5,6 @@
 #include <game/client/component.h>
 #include <game/client/lineinput.h>
 
-#include <game/zpack.h>
-
 class CChat : public CComponent
 {
 	CLineInput m_Input;
@@ -14,6 +12,7 @@ class CChat : public CComponent
 	enum 
 	{
 		MAX_LINES = 25,
+		MAX_HISTORY_LINES = 25,
 	};
 
 	struct CLine
@@ -30,7 +29,7 @@ class CChat : public CComponent
 	CLine m_aLines[MAX_LINES];
 	int m_CurrentLine;
 
-	char * m_aHistory[Z_ChatHistoryLinesCount];
+	char * m_aHistory[MAX_HISTORY_LINES];
 	char * m_aSavedLine;
 	int m_CurrentHistoryLine;
 

@@ -114,6 +114,11 @@ class CMenus : public CComponent
 		PAGE_SYSTEM,
 	};
 
+	enum
+	{
+		RECONNECTION_TIME = 5,
+	};
+
 	int m_GamePage;
 	int m_Popup;
 	int m_ActivePage;
