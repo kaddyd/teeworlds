@@ -366,7 +366,7 @@ void CChat::OnRender()
 
 	int64 Now = time_get();
 	float LineWidth = m_pClient->m_pScoreboard->Active() ? 95.0f : 200.0f;
-	float HeightLimit = m_pClient->m_pScoreboard->Active() ? 250.0f : m_Show ? 150.0f : 200.0f;
+	float HeightLimit = m_pClient->m_pScoreboard->Active() ? 250.0f : m_Show ? 70.0f : 200.0f;
 	float Begin = x;
 	float FontSize = 6.0f;
 	CTextCursor Cursor;

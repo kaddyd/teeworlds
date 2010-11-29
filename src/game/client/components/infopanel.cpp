@@ -87,11 +87,11 @@ void CInfoPanel::OnRender()
 
 	for (int i = 0; i < MAX_LINES; i++)
 	{
-		int r = ((m_CurrentLine - i) + MAX_LINES) % MAX_LINES;
+		int r = ((m_CurrentLine -  i) + MAX_LINES) % MAX_LINES;
 		if(Now > m_aLines[r].m_Time + 15 * time_freq())
 			break;
 
-		if (y > 120.0f)
+		if (y < 50.0f)
 			break;
 
 		TextRender()->SetCursor(&Cursor, x, y, 7.0f, TEXTFLAG_RENDER);
@@ -99,7 +99,7 @@ void CInfoPanel::OnRender()
 
 		TextRender()->TextEx(&Cursor, m_aLines[r].m_aText, -1);
 
-		y -= Cursor.m_Y - y - 7.0f;
+		y += Cursor.m_Y - y - 7.0f;
 	}
 
 	TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
