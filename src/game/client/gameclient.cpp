@@ -44,6 +44,7 @@
 #include "components/skins.h"
 #include "components/sounds.h"
 #include "components/voting.h"
+#include "components/infopanel.h"
 
 CGameClient g_GameClient;
 
@@ -68,6 +69,7 @@ static CSounds gs_Sounds;
 static CEmoticon gs_Emoticon;
 static CDamageInd gsDamageInd;
 static CVoting gs_Voting;
+static CInfoPanel gs_InfoPanel;
 
 static CPlayers gs_Players;
 static CNamePlates gs_NamePlates;
@@ -138,6 +140,7 @@ void CGameClient::OnConsoleInit()
 	m_pVoting = &::gs_Voting;
 	m_pScoreboard = &::gs_Scoreboard;
 	m_pHud = &::gs_Hud;
+	m_pInfoPanel = &::gs_InfoPanel;
 	
 	// make a list of all the systems, make sure to add them in the corrent render order
 	m_All.Add(m_pSkins);
@@ -163,6 +166,7 @@ void CGameClient::OnConsoleInit()
 	m_All.Add(&gs_Hud);
 	m_All.Add(&gs_Emoticon);
 	m_All.Add(&gs_KillMessages);
+	m_All.Add(m_pInfoPanel);
 	m_All.Add(m_pChat);
 	m_All.Add(&gs_Broadcast);
 	m_All.Add(&gs_DebugHud);

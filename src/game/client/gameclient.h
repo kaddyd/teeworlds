@@ -217,6 +217,7 @@ public:
 	class CVoting *m_pVoting;
 	class CScoreboard *m_pScoreboard;
 	class CHud * m_pHud;
+	class CInfoPanel * m_pInfoPanel;
 };
 
 extern const char *Localize(const char *Str);
