@@ -10,6 +10,7 @@
 #include <game/client/components/chat.h>
 #include <game/client/components/menus.h>
 
+#include "infopanel.h"
 #include "controls.h"
 
 CControls::CControls()
@@ -74,11 +75,23 @@ static void ConKeyInputNextPrevWeapon(IConsole::IResult *pResult, void *pUserDat
 static void ConZoomIn(IConsole::IResult *pResult, void *pUserData)
 {
 	g_Config.m_GfxZoom = clamp(g_Config.m_GfxZoom + 5, 10, 200);
+	if (pUserData)
+	{
+		char aBuf[256];
+		str_format(aBuf, sizeof(aBuf), Localize("Spectator zoom: %d"), g_Config.m_GfxZoom);
+		((CInfoPanel *)pUserData)->AddLine(aBuf);
+	}
 }
 
 static void ConZoomOut(IConsole::IResult *pResult, void *pUserData)
 {
 	g_Config.m_GfxZoom = clamp(g_Config.m_GfxZoom - 5, 10, 200);
+	if (pUserData)
+	{
+		char aBuf[256];
+		str_format(aBuf, sizeof(aBuf), Localize("Spectator zoom: %d"), g_Config.m_GfxZoom);
+		((CInfoPanel *)pUserData)->AddLine(aBuf);
+	}
 }
 
 void CControls::OnConsoleInit()
@@ -90,8 +103,8 @@ void CControls::OnConsoleInit()
 	Console()->Register("+hook", "", CFGFLAG_CLIENT, ConKeyInputState, &m_InputData.m_Hook, "Hook");
 	Console()->Register("+fire", "", CFGFLAG_CLIENT, ConKeyInputCounter, &m_InputData.m_Fire, "Fire");
 
-	Console()->Register("zoom_in", "", CFGFLAG_CLIENT, ConZoomIn, 0, "Zoom in (only for spectators)");
-	Console()->Register("zoom_out", "", CFGFLAG_CLIENT, ConZoomOut, 0, "Zoom out (only for spectators)");
+	Console()->Register("zoom_in", "", CFGFLAG_CLIENT, ConZoomIn, m_pClient->m_pInfoPanel, "Zoom in (only for spectators)");
+	Console()->Register("zoom_out", "", CFGFLAG_CLIENT, ConZoomOut, m_pClient->m_pInfoPanel, "Zoom out (only for spectators)");
 
 	{ static CInputSet s_Set = {this, &m_InputData.m_WantedWeapon, 1};  Console()->Register("+weapon1", "", CFGFLAG_CLIENT, ConKeyInputSet, (void *)&s_Set, "Switch to hammer"); }
 	{ static CInputSet s_Set = {this, &m_InputData.m_WantedWeapon, 2};  Console()->Register("+weapon2", "", CFGFLAG_CLIENT, ConKeyInputSet, (void *)&s_Set, "Switch to gun"); }
