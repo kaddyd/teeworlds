@@ -156,6 +156,16 @@ public:
 		CTeeRenderInfo m_RenderInfo; // this is what we use
 		
 		float m_Angle;
+
+		int m_LastTeam;
+
+		struct
+		{
+			int m_TotalKills;
+			int m_aKills[NUM_WEAPONS];
+			int m_TotalKilled;
+			int m_aKilled[NUM_WEAPONS];
+		} m_Stats;
 		
 		void UpdateRenderInfo();
 	};

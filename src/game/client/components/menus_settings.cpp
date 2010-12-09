@@ -110,6 +110,18 @@ void CMenus::RenderSettingsPlayer(CUIRect MainView)
 		LeftView.HSplitTop(20.0f, &Button, &LeftView);
 		if (DoButton_CheckBox(&g_Config.m_ClColorNicks, Localize("Color nicks"), g_Config.m_ClColorNicks, &Button))
 			g_Config.m_ClColorNicks ^= 1;
+		
+		LeftView.HSplitTop(20.0f, &Button, &LeftView);
+		if(DoButton_CheckBox(&g_Config.m_ClDetailedScoreboard, Localize("Detailed scoreboard"), g_Config.m_ClDetailedScoreboard, &Button))
+			g_Config.m_ClDetailedScoreboard ^= 1;
+
+		{
+			CUIRect Button;
+			LeftView.HSplitTop(20.0f, &Button, &LeftView);
+			Button.VSplitLeft(15.0f, 0, &Button);
+			if(DoButton_CheckBox(&g_Config.m_ClDetailedScoreboardFull, Localize("Full detailed scoreboard"), g_Config.m_ClDetailedScoreboardFull, &Button))
+				g_Config.m_ClDetailedScoreboardFull ^= 1;
+		}
 
         {
             const CSkins::CSkin *pOwnSkin = m_pClient->m_pSkins->Get(max(0, m_pClient->m_pSkins->Find(g_Config.m_PlayerSkin)));
@@ -213,7 +225,7 @@ void CMenus::RenderSettingsPlayer(CUIRect MainView)
 			}
 		}
 
-        MainView.HSplitTop(MainView.h/2, 0, &MainView);
+        MainView.HSplitTop(MainView.h*3/5, 0, &MainView);
 
 		// render skinselector
 		static bool s_InitSkinlist = true;

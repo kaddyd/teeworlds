@@ -412,6 +412,9 @@ void CGameClient::OnReset()
 		m_aClients[i].m_SkinInfo.m_ColorBody = vec4(1,1,1,1);
 		m_aClients[i].m_SkinInfo.m_ColorFeet = vec4(1,1,1,1);
 		m_aClients[i].UpdateRenderInfo();
+
+		m_aClients[i].m_LastTeam = -2;
+		mem_zero(&m_aClients[i].m_Stats, sizeof(m_aClients[i].m_Stats));
 	}
 	
 	for(int i = 0; i < m_All.m_Num; i++)
@@ -493,6 +496,16 @@ void CGameClient::OnRender()
 	Graphics()->QuadsEnd();
 	
 	return;*/
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (m_aClients[i].m_Team != m_aClients[i].m_LastTeam)
+		{
+			if (m_aClients[i].m_LastTeam != -2) // we don't need to call mem_zero 2 times, right?
+				mem_zero(&m_aClients[i].m_Stats, sizeof(m_aClients[i].m_Stats));
+			m_aClients[i].m_LastTeam = m_aClients[i].m_Team;
+		}
+	}
 	
 	// update the local character position
 	UpdateLocalCharacterPos();
@@ -597,6 +610,7 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker)
 	}
 	else if(MsgId == NETMSGTYPE_SV_KILLMSG)
 	{
+		// for spectator follow
 		CNetMsg_Sv_KillMsg *pMsg = (CNetMsg_Sv_KillMsg *)pRawMsg;
 		if (!m_Freeview)
 		{
@@ -604,6 +618,25 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker)
 			{
 				m_SpectateClientId = pMsg->m_Killer;
 			}
+		}
+
+		// for detailed scoreboard
+		if (pMsg->m_Killer != pMsg->m_Victim && pMsg->m_Killer >= 0 && pMsg->m_Killer < MAX_CLIENTS)
+		{
+			if (pMsg->m_Weapon >= WEAPON_HAMMER && pMsg->m_Weapon < NUM_WEAPONS)
+			{
+				m_aClients[pMsg->m_Killer].m_Stats.m_aKills[pMsg->m_Weapon]++;
+			}
+			m_aClients[pMsg->m_Killer].m_Stats.m_TotalKills++;
+		}
+
+		if (pMsg->m_Victim >= 0 && pMsg->m_Victim < MAX_CLIENTS)
+		{
+			if (pMsg->m_Weapon >= WEAPON_HAMMER && pMsg->m_Weapon < NUM_WEAPONS)
+			{
+				m_aClients[pMsg->m_Victim].m_Stats.m_aKilled[pMsg->m_Weapon]++;
+			}
+			m_aClients[pMsg->m_Victim].m_Stats.m_TotalKilled++;
 		}
 	}
 	else if (MsgId == NETMSGTYPE_SV_EMOTICON)

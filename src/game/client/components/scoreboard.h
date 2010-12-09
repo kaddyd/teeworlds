@@ -11,10 +11,15 @@ class CScoreboard : public CComponent
 	void RenderScoreboard(float x, float y, float w, int Team, const char *pTitle);
 	void RenderRecordingNotification(float x);
 
+	void RenderDetailedScoreboard();
+
 	static void ConKeyScoreboard(IConsole::IResult *pResult, void *pUserData);
+	static void ConKeyBasicScoreboard(IConsole::IResult *pResult, void *pUserData);
+	static void ConKeyDetailedScoreboard(IConsole::IResult *pResult, void *pUserData);
 	
-	bool m_Active;
+	int m_Active;
 	
+	float m_DetailedScoreboardWidth;
 public:
 	CScoreboard();
 	virtual void OnReset();

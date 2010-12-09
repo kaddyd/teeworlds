@@ -55,6 +55,8 @@ MACRO_CONFIG_INT(GfxNoclip, gfx_noclip, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "D
 MACRO_CONFIG_INT(ClAutoReconnect, cl_auto_reconnect, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Auto reconnect if you were disconnected")
 MACRO_CONFIG_INT(UiNewBackground, ui_new_background, 1, 0, 4, CFGFLAG_CLIENT|CFGFLAG_SAVE, "New, colorful backgrounds")
 MACRO_CONFIG_INT(GfxZoom, gfx_zoom, 100, 10, 200, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Zoom level (only for spectators and demos)")
+MACRO_CONFIG_INT(ClDetailedScoreboard, cl_detailed_scoreboard, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Detailed scoreboard")
+MACRO_CONFIG_INT(ClDetailedScoreboardFull, cl_detailed_scoreboard_full, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Show full info in detailed scoreboard")
 
 // server
 MACRO_CONFIG_INT(SvWarmup, sv_warmup, 0, 0, 0, CFGFLAG_SERVER, "Number of seconds to do warmup before round starts")
