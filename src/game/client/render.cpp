@@ -7,6 +7,7 @@
 #include <engine/shared/config.h>
 #include <engine/graphics.h>
 #include <engine/map.h>
+#include <engine/serverbrowser.h>
 #include <game/generated/client_data.h>
 #include <game/generated/protocol.h>
 #include <game/layers.h>
@@ -293,7 +294,11 @@ void CRenderTools::MapscreenToWorld(float CenterX, float CenterY, float Parallax
 	Width *= Zoom;
 	Height *= Zoom;
 
-	if ((g_GameClient.m_Snap.m_pLocalInfo && g_GameClient.m_Snap.m_pLocalInfo->m_Team < 0) || g_GameClient.Client()->State() == IClient::STATE_DEMOPLAYBACK)
+	CServerInfo CurrentServerInfo;
+	g_GameClient.Client()->GetServerInfo(&CurrentServerInfo);
+	
+	if ((g_GameClient.m_Snap.m_pLocalInfo && g_GameClient.m_Snap.m_pLocalInfo->m_Team < 0) || g_GameClient.Client()->State() == IClient::STATE_DEMOPLAYBACK ||
+		str_find_nocase(CurrentServerInfo.m_aGameType, "race"))
 	{
 		float SpecZoom = g_Config.m_GfxZoom * 0.01f;
 		Width /= SpecZoom;

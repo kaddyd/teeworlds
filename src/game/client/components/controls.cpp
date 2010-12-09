@@ -78,7 +78,7 @@ static void ConZoomIn(IConsole::IResult *pResult, void *pUserData)
 	if (pUserData)
 	{
 		char aBuf[256];
-		str_format(aBuf, sizeof(aBuf), Localize("Spectator zoom: %d"), g_Config.m_GfxZoom);
+		str_format(aBuf, sizeof(aBuf), Localize("Zoom: %d"), g_Config.m_GfxZoom);
 		((CInfoPanel *)pUserData)->AddLine(aBuf);
 	}
 }
@@ -89,7 +89,7 @@ static void ConZoomOut(IConsole::IResult *pResult, void *pUserData)
 	if (pUserData)
 	{
 		char aBuf[256];
-		str_format(aBuf, sizeof(aBuf), Localize("Spectator zoom: %d"), g_Config.m_GfxZoom);
+		str_format(aBuf, sizeof(aBuf), Localize("Zoom: %d"), g_Config.m_GfxZoom);
 		((CInfoPanel *)pUserData)->AddLine(aBuf);
 	}
 }
