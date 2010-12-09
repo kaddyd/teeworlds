@@ -19,6 +19,12 @@ Please wait
 %d second(s)
 == %d секунд
 
+%d/%d KiB
+== %d/%d кб
+
+%d/%d KiB (%.1f KiB/sec)
+== %d/%d кб (%.1f кб/сек)
+
 # Уродливо? Да. Надо будет добавить хоть чуть-чуть логики в локализацию, потому что изменять что-то в коде специально для русского языка - это как-то не профит =\
 
 1 минут
@@ -198,6 +204,9 @@ Are you sure that you want to quit?
 As this is the first time you launch the game, please enter your nick name below. It's recommended that you check the settings to adjust them to your liking before joining a server.
 == Так как это ваш первый запуск игры, пожалуйста, введите свой ник в поле ниже. Также рекоммендуется проверить настройки игры и поменять некоторые из них перед тем, как начать играть.
 
+Automatically record demos
+== Автоматически записывать демо
+
 Blue team
 == Синие
 
@@ -250,7 +259,7 @@ Connect
 == Подключиться
 
 Connecting to
-== Подключение к
+== Соединение с сервером
 
 Connection Problems...
 == Проблемы со связью...
@@ -314,6 +323,12 @@ Demos
 
 Detail
 == Детальный
+
+Detailed scoreboard
+== Детальное табло
+
+Full detailed scoreboard
+== Полное детальное табло
 
 Disconnect
 == Отключить
@@ -469,7 +484,7 @@ Join blue
 == За синих
 
 Join game
-== Наблюдать
+== Играть
 
 Join red
 == За красных
@@ -847,7 +862,7 @@ Toggles the envelope editor.
 == Показать или скрыть редактор кривых
 
 Try again
-== Попробовать снова
+== Войти
 
 Type
 == Тип
@@ -1053,7 +1068,7 @@ Shift
 == Смещение 
 
 Stop record
-== Остановить запись
+== Стоп записи
 
 Tiles
 == Тайлы
