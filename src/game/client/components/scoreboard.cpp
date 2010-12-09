@@ -788,41 +788,40 @@ void CScoreboard::OnRender()
 	if(m_pClient->m_pMotd->IsActive())
 		m_pClient->m_pMotd->Clear();
 
-	if (m_Active == 2 || (g_Config.m_ClDetailedScoreboard && DoScoreBoard))
-	{
-		RenderDetailedScoreboard();
-		return;
-	}
-
 	float Width = 400*3.0f*Graphics()->ScreenAspect();
 	float Height = 400*3.0f;
 	
 	Graphics()->MapScreen(0, 0, Width, Height);
 
 	float w = 650.0f;
-
-	if(m_pClient->m_Snap.m_pGameobj && !(m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS))
+	
+	if (m_Active == 2 || (g_Config.m_ClDetailedScoreboard && DoScoreBoard))
 	{
-		RenderScoreboard(Width/2-w/2, 150.0f, w, 0, 0);
-		//render_scoreboard(gameobj, 0, 0, -1, 0);
-	}
-	else
-	{
-			
-		if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_GameOver)
+		RenderDetailedScoreboard();
+	} else {
+		if(m_pClient->m_Snap.m_pGameobj && !(m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS))
 		{
-			const char *pText = Localize("Draw!");
-			if(m_pClient->m_Snap.m_pGameobj->m_TeamscoreRed > m_pClient->m_Snap.m_pGameobj->m_TeamscoreBlue)
-				pText = Localize("Red team wins!");
-			else if(m_pClient->m_Snap.m_pGameobj->m_TeamscoreBlue > m_pClient->m_Snap.m_pGameobj->m_TeamscoreRed)
-				pText = Localize("Blue team wins!");
-				
-			float w = TextRender()->TextWidth(0, 92.0f, pText, -1);
-			TextRender()->Text(0, Width/2-w/2, 45, 92.0f, pText, -1);
+			RenderScoreboard(Width/2-w/2, 150.0f, w, 0, 0);
+			//render_scoreboard(gameobj, 0, 0, -1, 0);
 		}
-		
-		RenderScoreboard(Width/2-w-20, 150.0f, w, 0, Localize("Red team"));
-		RenderScoreboard(Width/2 + 20, 150.0f, w, 1, Localize("Blue team"));
+		else
+		{
+				
+			if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_GameOver)
+			{
+				const char *pText = Localize("Draw!");
+				if(m_pClient->m_Snap.m_pGameobj->m_TeamscoreRed > m_pClient->m_Snap.m_pGameobj->m_TeamscoreBlue)
+					pText = Localize("Red team wins!");
+				else if(m_pClient->m_Snap.m_pGameobj->m_TeamscoreBlue > m_pClient->m_Snap.m_pGameobj->m_TeamscoreRed)
+					pText = Localize("Blue team wins!");
+					
+				float w = TextRender()->TextWidth(0, 92.0f, pText, -1);
+				TextRender()->Text(0, Width/2-w/2, 45, 92.0f, pText, -1);
+			}
+			
+			RenderScoreboard(Width/2-w-20, 150.0f, w, 0, Localize("Red team"));
+			RenderScoreboard(Width/2 + 20, 150.0f, w, 1, Localize("Blue team"));
+		}
 	}
 
 	RenderGoals(Width/2-w/2, 150+750+25, w);
