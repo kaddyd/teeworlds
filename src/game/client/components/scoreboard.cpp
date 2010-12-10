@@ -798,6 +798,7 @@ void CScoreboard::OnRender()
 	if (m_Active == 2 || (g_Config.m_ClDetailedScoreboard && DoScoreBoard))
 	{
 		RenderDetailedScoreboard();
+		RenderRecordingNotification((Width / 7) * 4);
 	} else {
 		if(m_pClient->m_Snap.m_pGameobj && !(m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS))
 		{
@@ -822,11 +823,11 @@ void CScoreboard::OnRender()
 			RenderScoreboard(Width/2-w-20, 150.0f, w, 0, Localize("Red team"));
 			RenderScoreboard(Width/2 + 20, 150.0f, w, 1, Localize("Blue team"));
 		}
-	}
 
-	RenderGoals(Width/2-w/2, 150+750+25, w);
-	RenderSpectators(Width/2-w/2, 150+750+25+50+25, w);
-	RenderRecordingNotification((Width/7)*4);
+		RenderGoals(Width/2-w/2, 150+750+25, w);
+		RenderSpectators(Width/2-w/2, 150+750+25+50+25, w);
+		RenderRecordingNotification((Width/7)*4);
+	}
 }
 
 bool CScoreboard::Active()
