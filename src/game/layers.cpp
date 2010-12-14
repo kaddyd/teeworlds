@@ -39,6 +39,7 @@ void CLayers::Init(class IKernel *pKernel)
 					m_pGameGroup->m_OffsetY = 0;
 					m_pGameGroup->m_ParallaxX = 100;
 					m_pGameGroup->m_ParallaxY = 100;
+					
 					if(m_pGameGroup->m_Version >= 2)
 					{
 						m_pGameGroup->m_UseClipping = 0;

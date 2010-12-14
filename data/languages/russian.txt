@@ -971,6 +971,12 @@ Are you sure that you want to delete the demo?
 Aspect ratio
 == Соотношение сторон
 
+Automatically record demos
+== 
+
+Automatically take game over screenshot
+== 
+
 Blue value of the envelope
 == Значение синего у кривой
 
@@ -1024,6 +1030,12 @@ Left mouse to drag. Hold ctrl to be more precise. Hold shift to alter time point
 
 Load map
 == Загрузить карту
+
+Max Screenshots
+== 
+
+Max demos
+== 
 
 New folder
 == Новая папка
@@ -1114,6 +1126,9 @@ Winter
 
 Desert
 == Пустыня
+
+no limit
+== 
 
 ##### old translations #####
 

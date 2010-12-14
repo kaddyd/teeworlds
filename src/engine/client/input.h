@@ -33,7 +33,7 @@ public:
 
 	int ButtonPressed(int Button) { return m_aInputState[m_InputCurrent][Button]; }
 
-	virtual void Update();
+	virtual int Update();
 };
 
 #endif

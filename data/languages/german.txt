@@ -933,5 +933,20 @@ ZO
 
 ##### needs translation #####
 
+Automatically record demos
+== 
+
+Automatically take game over screenshot
+== 
+
+Max Screenshots
+== 
+
+Max demos
+== 
+
+no limit
+== 
+
 ##### old translations #####
 
