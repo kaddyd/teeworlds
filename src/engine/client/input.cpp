@@ -110,7 +110,7 @@ int CInput::KeyState(int Key)
 	return m_aInputState[m_InputCurrent][Key];
 }
 
-void CInput::Update()
+int CInput::Update()
 {
 	if(m_InputGrabbed && !Graphics()->WindowActive())
 		MouseModeAbsolute();
@@ -202,6 +202,8 @@ void CInput::Update()
 
 		}
 	}
+
+	return 0;
 }
 
 
