@@ -193,11 +193,6 @@ class CMenus : public CComponent
 
 	// for auto-reconnect
 	int m_ReconnectTime;
-
-	// for download bar
-	int m_DownloadLastCheckTime;
-	unsigned long m_DownloadLastCheckSize;
-	float m_DownloadSpeed;
 	
 	void DemolistOnUpdate(bool Reset);
 	void DemolistPopulate();

@@ -54,12 +54,10 @@ void CChat::OnReset()
 	m_Show = false;
 	m_InputUpdate = false;
 	m_ChatStringOffset = 0;
-
-	m_CurrentHistoryLine = -1;
-	
-	m_aCompletionMiddle = false;
-	m_aCompletionBuffer[0] = 0;
 	m_CompletionChosen = -1;
+	m_aCompletionBuffer[0] = 0;
+	m_PlaceholderOffset = 0;
+	m_PlaceholderLength = 0;
 }
 
 void CChat::OnRelease()
@@ -183,35 +181,58 @@ bool CChat::OnInput(IInput::CEvent e)
 		m_CurrentHistoryLine = -1;
 		m_aSavedLine[0] = 0;
 	}
-	else if(e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_TAB)
+	if(e.m_Flags&IInput::FLAG_PRESS && e.m_Key == KEY_TAB)
 	{
-		m_CompletionChosen++;
-		m_CompletionEnumerationCount = 0;
-		PossibleNames(m_aCompletionBuffer, m_aCompletionMiddle);
-		
-		// handle wrapping
-		if(m_CompletionEnumerationCount && m_CompletionChosen >= m_CompletionEnumerationCount)
+		// fill the completion buffer
+		if(m_CompletionChosen < 0)
 		{
-			m_CompletionChosen %= m_CompletionEnumerationCount;
-			m_CompletionEnumerationCount = 0;
-			PossibleNames(m_aCompletionBuffer, m_aCompletionMiddle);
+			const char *pCursor = m_Input.GetString()+m_Input.GetCursorOffset();
+			for(int Count = 0; Count < m_Input.GetCursorOffset() && *(pCursor-1) != ' '; --pCursor, ++Count);
+			m_PlaceholderOffset = pCursor-m_Input.GetString();
+
+			for(m_PlaceholderLength = 0; *pCursor && *pCursor != ' '; ++pCursor)
+				++m_PlaceholderLength;
+
+			str_copy(m_aCompletionBuffer, m_Input.GetString()+m_PlaceholderOffset, min(static_cast<int>(sizeof(m_aCompletionBuffer)), m_PlaceholderLength+1));
+		}
+
+		// find next possible name
+		const char *pCompletionString = 0;
+		m_CompletionChosen = (m_CompletionChosen+1)%MAX_CLIENTS;
+		for(int i = 0; i < MAX_CLIENTS; ++i)
+		{
+			int Index = (m_CompletionChosen+i)%MAX_CLIENTS;
+			if(!m_pClient->m_Snap.m_paPlayerInfos[Index])
+				continue;
+
+			if(str_find_nocase(m_pClient->m_aClients[Index].m_aName, m_aCompletionBuffer))
+			{
+				pCompletionString = m_pClient->m_aClients[Index].m_aName;
+				m_CompletionChosen = Index;
+				break;
+			}
+		}
+
+		// insert the name
+		if(pCompletionString)
+		{
+			char aBuf[256];
+			str_copy(aBuf, m_Input.GetString(), min(static_cast<int>(sizeof(aBuf)), m_PlaceholderOffset+1));
+			str_append(aBuf, pCompletionString, sizeof(aBuf));
+			str_append(aBuf, m_Input.GetString()+m_PlaceholderOffset+m_PlaceholderLength, sizeof(aBuf));
+			m_PlaceholderLength = str_length(pCompletionString);
+			m_OldChatStringLength = m_Input.GetLength();
+			m_Input.Set(aBuf);
+			m_Input.SetCursorOffset(m_PlaceholderOffset+m_PlaceholderLength);
+			m_InputUpdate = true;
 		}
 	}
 	else
 	{
-		if(e.m_Flags&IInput::FLAG_PRESS)
-		{
+		// reset name completion process
+		if(e.m_Flags&IInput::FLAG_PRESS && e.m_Key != KEY_TAB)
 			m_CompletionChosen = -1;
-			const char * aBuf = strrchr(m_Input.GetString(), ' ');
-			if (aBuf)
-			{
-				strncpy(m_aCompletionBuffer, aBuf+1, strlen(aBuf));
-			} else {
-				str_copy(m_aCompletionBuffer, m_Input.GetString(), sizeof(m_aCompletionBuffer));
-			}
-			m_aCompletionMiddle = aBuf;
-		}
-		
+
 		m_OldChatStringLength = m_Input.GetLength();
 		m_Input.ProcessInput(e);
 		m_InputUpdate = true;
@@ -235,6 +256,7 @@ void CChat::EnableMode(int Team)
 		
 		m_Input.Clear();
 		Input()->ClearEvents();
+		m_CompletionChosen = -1;
 	}
 }
 
@@ -391,6 +413,8 @@ void CChat::OnRender()
 		// cut off if msgs waste too much space
 		if(y < HeightLimit)
 			break;
+
+		float Blend = Now > m_aLines[r].m_Time+14*time_freq() && !m_Show ? 1.0f-(Now-m_aLines[r].m_Time-14*time_freq())/(2.0f*time_freq()) : 1.0f;
 		
 		// reset the cursor
 		TextRender()->SetCursor(&Cursor, Begin, y, FontSize, TEXTFLAG_RENDER);
@@ -398,23 +422,23 @@ void CChat::OnRender()
 
 		// render name
 		if(m_aLines[r].m_ClientId == -1)
-			TextRender()->TextColor(1.0f, 1.0f, 0.5f, 1.0f); // system
+			TextRender()->TextColor(1.0f, 1.0f, 0.5f, Blend); // system
 		else if(m_aLines[r].m_Team)
-			TextRender()->TextColor(0.45f, 0.9f, 0.45f, 1.0f); // team message
+			TextRender()->TextColor(0.45f, 0.9f, 0.45f, Blend); // team message
 		else if(m_aLines[r].m_NameColor == 0)
-			TextRender()->TextColor(1.0f, 0.5f, 0.5f, 1.0f); // red
+			TextRender()->TextColor(1.0f, 0.5f, 0.5f, Blend); // red
 		else if(m_aLines[r].m_NameColor == 1)
-			TextRender()->TextColor(0.7f, 0.7f, 1.0f, 1.0f); // blue
+			TextRender()->TextColor(0.7f, 0.7f, 1.0f, Blend); // blue
 		else if(m_aLines[r].m_NameColor == -1)
-			TextRender()->TextColor(0.75f, 0.5f, 0.75f, 1.0f); // spectator
+			TextRender()->TextColor(0.75f, 0.5f, 0.75f, Blend); // spectator
 		else
 		{
 			if (m_pClient->m_Snap.m_paPlayerInfos[m_aLines[r].m_ClientId])
 			{
 				vec3 color = m_pClient->m_pHud->GetNickColor(m_pClient->m_Snap.m_paPlayerInfos[m_aLines[r].m_ClientId]);
-				TextRender()->TextColor(color.r, color.g, color.b, 1.0f);
+				TextRender()->TextColor(color.r, color.g, color.b, Blend);
 			} else {
-				TextRender()->TextColor(0.8f, 0.8f, 0.8f, 1.0f);
+				TextRender()->TextColor(0.8f, 0.8f, 0.8f, Blend);
 			}
 		}
 			
@@ -422,11 +446,11 @@ void CChat::OnRender()
 
 		// render line
 		if(m_aLines[r].m_ClientId == -1)
-			TextRender()->TextColor(1.0f, 1.0f, 0.5f, 1.0f); // system
+			TextRender()->TextColor(1.0f, 1.0f, 0.5f, Blend); // system
 		else if(m_aLines[r].m_Team)
-			TextRender()->TextColor(0.65f, 1.0f, 0.65f, 1.0f); // team message
+			TextRender()->TextColor(0.65f, 1.0f, 0.65f, Blend); // team message
 		else
-			TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
+			TextRender()->TextColor(1.0f, 1.0f, 1.0f, Blend);
 
 		TextRender()->TextEx(&Cursor, m_aLines[r].m_aText, -1);
 	}
@@ -441,38 +465,4 @@ void CChat::Say(int Team, const char *pLine)
 	Msg.m_Team = Team;
 	Msg.m_pMessage = pLine;
 	Client()->SendPackMsg(&Msg, MSGFLAG_VITAL);
-}
-
-void CChat::PossibleNames(const char *pStr, const bool inmiddle)
-{
-	for(int i = 0; i < Client()->SnapNumItems(IClient::SNAP_CURRENT); i++)
-	{
-		IClient::CSnapItem Item;
-		const void *pData = Client()->SnapGetItem(IClient::SNAP_CURRENT, i, &Item);
-
-		if(Item.m_Type == NETOBJTYPE_PLAYERINFO)
-		{
-			const CNetObj_PlayerInfo *pInfo = (const CNetObj_PlayerInfo *)pData;
-			
-			if(str_find_nocase(m_pClient->m_aClients[pInfo->m_ClientId].m_aName, pStr))
-			{
-				if(m_CompletionChosen == m_CompletionEnumerationCount)
-				{
-					if(inmiddle)
-					{
-						char aSt[512];
-						const char * pBuf = strrchr(m_Input.GetString(), ' ');
-						strncpy(aSt, m_Input.GetString(), pBuf - m_Input.GetString() + 1);
-						strcat(aSt, m_pClient->m_aClients[pInfo->m_ClientId].m_aName);
-						m_Input.Set(aSt);
-					} else {
-						char aBuf[128];
-						str_format(aBuf, sizeof(aBuf), "%s:", m_pClient->m_aClients[pInfo->m_ClientId].m_aName);
-						m_Input.Set(aBuf);
-					}
-				}
-				m_CompletionEnumerationCount++;
-			}
-		}
-	}
 }
