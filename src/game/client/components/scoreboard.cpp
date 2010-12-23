@@ -73,7 +73,7 @@ void CScoreboard::RenderDetailedScoreboard()
         float height = 400*3.0f;
 
         float w = m_DetailedScoreboardWidth;
-	float need_w = 1400.0f;
+	float need_w = 400 * 3.0f * Graphics()->ScreenAspect();
         float h = 900.0f;
 	
 	int numActiveWeapons = 0;
