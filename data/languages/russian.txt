@@ -1127,7 +1127,22 @@ Winter
 Desert
 == Пустыня
 
+left
+== 
+
+minute
+== 
+
+minutes
+== 
+
 no limit
+== 
+
+second
+== 
+
+seconds
 == 
 
 ##### old translations #####
