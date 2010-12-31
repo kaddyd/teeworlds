@@ -972,10 +972,10 @@ Aspect ratio
 == Соотношение сторон
 
 Automatically record demos
-== 
+== Автоматически записывать демо
 
 Automatically take game over screenshot
-== 
+== Автоматически снимать скриншоты в конце игры
 
 Blue value of the envelope
 == Значение синего у кривой
@@ -1032,10 +1032,10 @@ Load map
 == Загрузить карту
 
 Max Screenshots
-== 
+== Макс. кол-во скриншотов
 
 Max demos
-== 
+== Макс. кол-во демо
 
 New folder
 == Новая папка
@@ -1128,22 +1128,22 @@ Desert
 == Пустыня
 
 left
-== 
+== осталось
 
 minute
-== 
+== минута
 
 minutes
-== 
+== минут
 
 no limit
-== 
+== нет лимита
 
 second
-== 
+== секунда
 
 seconds
-== 
+== секунд
 
 ##### old translations #####
 

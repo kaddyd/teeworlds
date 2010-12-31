@@ -390,6 +390,9 @@ void CGameClient::OnConnected()
 
 	m_Freeview = true;
 	m_SpectateClientId = -1;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+		mem_zero(&m_aClients[i].m_Stats, sizeof(m_aClients[i].m_Stats));
 }
 
 void CGameClient::OnReset()
