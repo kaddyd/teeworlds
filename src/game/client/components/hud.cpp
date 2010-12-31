@@ -368,7 +368,11 @@ vec3 CHud::GetNickColor(const CNetObj_PlayerInfo * pPlayerInfo)
 
 	if (m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS)
 	{
-		if (pPlayerInfo->m_Team)
+		if (pPlayerInfo->m_Team < 0)
+		{
+			return vec3(1.0f, 1.0f, 1.0f);
+		}
+		else if (pPlayerInfo->m_Team)
 		{
 			return vec3(0.7f, 0.7f, 1.0f);
 		} else {
