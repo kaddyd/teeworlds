@@ -576,6 +576,10 @@ void CMenus::RenderSettingsGraphics(CUIRect MainView)
 	MainView.HSplitTop(20.0f, &Button, &MainView);
 	if(DoButton_CheckBox(&g_Config.m_GfxHighDetail, Localize("High Detail"), g_Config.m_GfxHighDetail, &Button))
 		g_Config.m_GfxHighDetail ^= 1;
+		
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_GfxEyeCandy, Localize("Eye Candy"), g_Config.m_GfxEyeCandy, &Button))
+		g_Config.m_GfxEyeCandy ^= 1;
 
 	// check if the new settings require a restart
 	if(CheckSettings)

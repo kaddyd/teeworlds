@@ -79,7 +79,10 @@ void CItems::RenderProjectile(const CNetObj_Projectile *pCurrent, int ItemId)
 	}
 	else
 	{
-		m_pClient->m_pEffects->BulletTrail(Pos);
+		if(pCurrent->m_Type != WEAPON_SHOTGUN)
+			m_pClient->m_pEffects->SgBulletTrail(Pos);
+		else
+			m_pClient->m_pEffects->BulletTrail(Pos);
 		m_pClient->m_pFlow->Add(Pos, Vel*1000*Client()->FrameTime(), 10.0f);
 
 		if(length(Vel) > 0.00001f)
@@ -107,6 +110,7 @@ void CItems::RenderPickup(const CNetObj_Pickup *pPrev, const CNetObj_Pickup *pCu
 		Angle = 0; //-pi/6;//-0.25f * pi * 2.0f;
 		RenderTools()->SelectSprite(g_pData->m_Weapons.m_aId[clamp(pCurrent->m_Subtype, 0, NUM_WEAPONS-1)].m_pSpriteBody);
 		Size = g_pData->m_Weapons.m_aId[clamp(pCurrent->m_Subtype, 0, NUM_WEAPONS-1)].m_VisualSize;
+		m_pClient->m_pEffects->WeaponShine(Pos, vec2(96,18));
 	}
 	else
 	{
@@ -161,11 +165,6 @@ void CItems::RenderFlag(const CNetObj_Flag *pPrev, const CNetObj_Flag *pCurrent)
 	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
 	Graphics()->QuadsBegin();
 
-	if(pCurrent->m_Team == TEAM_RED)
-		RenderTools()->SelectSprite(SPRITE_FLAG_RED);
-	else
-		RenderTools()->SelectSprite(SPRITE_FLAG_BLUE);
-
 	Graphics()->QuadsSetRotation(Angle);
 
 	vec2 Pos = mix(vec2(pPrev->m_X, pPrev->m_Y), vec2(pCurrent->m_X, pCurrent->m_Y), Client()->IntraGameTick());
@@ -177,6 +176,15 @@ void CItems::RenderFlag(const CNetObj_Flag *pPrev, const CNetObj_Flag *pCurrent)
 	// make sure to use predicted position if we are the carrier
 	if(m_pClient->m_Snap.m_pLocalInfo && pCurrent->m_CarriedBy == m_pClient->m_Snap.m_pLocalInfo->m_ClientId)
 		Pos = m_pClient->m_LocalCharacterPos;
+		
+	if(pCurrent->m_Team == TEAM_RED)
+	{
+		RenderTools()->SelectSprite(SPRITE_FLAG_RED);
+		m_pClient->m_pEffects->RedFlagShine(Pos, vec2(96,18));
+	} else {
+		RenderTools()->SelectSprite(SPRITE_FLAG_BLUE);
+		m_pClient->m_pEffects->BlueFlagShine(Pos, vec2(96,18));
+	}
 
 	IGraphics::CQuadItem QuadItem(Pos.x, Pos.y-Size*0.75f, Size, Size*2);
 	Graphics()->QuadsDraw(&QuadItem, 1);

@@ -3,6 +3,7 @@
 #include <base/math.h>
 #include <engine/graphics.h>
 #include <engine/demo.h>
+#include <engine/shared/config.h>
 
 #include <game/generated/client_data.h>
 #include <game/client/render.h>
@@ -146,7 +147,10 @@ void CParticles::OnRender()
 
 void CParticles::RenderGroup(int Group)
 {
-	Graphics()->BlendNormal();
+	if (g_Config.m_GfxEyeCandy)
+		Graphics()->BlendAdditive();
+	else
+		Graphics()->BlendNormal();
 	//gfx_blend_additive();
 	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_PARTICLES].m_Id);
 	Graphics()->QuadsBegin();

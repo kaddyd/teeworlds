@@ -14,6 +14,7 @@ public:
 	virtual void OnRender();
 
 	void BulletTrail(vec2 Pos);
+	void SgBulletTrail(vec2 Pos);
 	void SmokeTrail(vec2 Pos, vec2 Vel);
 	void SkidTrail(vec2 Pos, vec2 Vel);
 	void Explosion(vec2 Pos);
@@ -23,6 +24,9 @@ public:
 	void PlayerSpawn(vec2 Pos);
 	void PlayerDeath(vec2 Pos, int ClientId);
 	void PowerupShine(vec2 Pos, vec2 Size);
+	void WeaponShine(vec2 Pos, vec2 Size);
+	void RedFlagShine(vec2 Pos, vec2 Size);
+	void BlueFlagShine(vec2 Pos, vec2 Size);
 
 	void Update();
 };

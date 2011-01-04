@@ -68,6 +68,12 @@ void CEffects::PowerupShine(vec2 Pos, vec2 size)
 	p.m_Gravity = 500;
 	p.m_Friction = 0.9f;
 	p.m_FlowAffected = 0.0f;
+	if (g_Config.m_GfxEyeCandy)
+	{
+		p.m_Gravity = -100;
+		p.m_LifeSpan = 1.3f;
+		p.m_Color = vec4(frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, 0.8f);
+	}
 	m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
 }
 
@@ -86,6 +92,33 @@ void CEffects::SmokeTrail(vec2 Pos, vec2 Vel)
 	p.m_EndSize = 0;
 	p.m_Friction = 0.7;
 	p.m_Gravity = frandom()*-500.0f;
+	if (g_Config.m_GfxEyeCandy)
+	{
+		switch (rand()%5)
+		{
+		case 0:
+			p.m_Spr = SPRITE_PART_SMOKE;
+			break;
+		case 1:
+			p.m_Spr = SPRITE_PART_SLICE;
+			break;
+		case 2:
+			p.m_Spr = SPRITE_PART_AIRJUMP;
+			break;
+		case 3:
+			p.m_Spr = SPRITE_PART_BALL;
+			break;
+		case 4:
+			p.m_Spr = SPRITE_PART_SHELL;
+			break;
+		}
+		
+		p.m_LifeSpan = 0.8f + frandom() * 0.8f;
+		p.m_StartSize = 12.0f + frandom() * 6.0f;
+		p.m_Friction = 0.80005f;
+		p.m_Gravity = frandom() * -1000.0f;
+		p.m_Color = vec4(frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f);
+	}
 	m_pClient->m_pParticles->Add(CParticles::GROUP_PROJECTILE_TRAIL, &p);
 }
 
@@ -122,6 +155,31 @@ void CEffects::BulletTrail(vec2 Pos)
 	p.m_StartSize = 8.0f;
 	p.m_EndSize = 0;
 	p.m_Friction = 0.7f;
+	if (g_Config.m_GfxEyeCandy)
+	{
+		p.m_LifeSpan = 0.25f + frandom() * 0.75f;
+		p.m_Friction = 0.7f;
+		p.m_Gravity = -40 + frandom() * 3.0f;
+		p.m_Color = vec4(frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, 1.0f);
+	}
+	m_pClient->m_pParticles->Add(CParticles::GROUP_PROJECTILE_TRAIL, &p);
+}
+
+void CEffects::SgBulletTrail(vec2 Pos)
+{
+	if(!m_Add100hz && g_Config.m_GfxEyeCandy)
+		return;
+		
+	CParticle p;
+	p.SetDefault();
+	p.m_Spr = SPRITE_PART_BALL;
+	p.m_Pos = Pos;
+	p.m_LifeSpan = 0.35f + frandom()*0.75f;
+	p.m_StartSize = 9.0f;
+	p.m_EndSize = 0;
+	p.m_Friction = 0.5f;
+	p.m_Gravity = -70 + frandom() * 4.0f;
+	p.m_Color = vec4(frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, frandom() * 0.5f + 0.5f, 1.0f);
 	m_pClient->m_pParticles->Add(CParticles::GROUP_PROJECTILE_TRAIL, &p);
 }
 
@@ -142,6 +200,10 @@ void CEffects::PlayerSpawn(vec2 Pos)
 		p.m_Gravity = frandom()*-400.0f;
 		p.m_Friction = 0.7f;
 		p.m_Color = vec4(0xb5/255.0f, 0x50/255.0f, 0xcb/255.0f, 1.0f);
+		if (g_Config.m_GfxEyeCandy)
+		{
+			p.m_Gravity = frandom() * -800.0f;
+		}
 		m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
 		
 	}
@@ -180,6 +242,30 @@ void CEffects::PlayerDeath(vec2 Pos, int Cid)
 		p.m_Friction = 0.8f;
 		vec3 c = BloodColor * (0.75f + frandom()*0.25f);
 		p.m_Color = vec4(c.r, c.g, c.b, 0.75f);
+		if (g_Config.m_GfxEyeCandy)
+		{
+			switch(rand()%6)
+			{
+			case 0:
+				p.m_Color = vec4(c.r, c.g, c.b, 0.75f);
+				break;
+			case 1:
+				p.m_Color = vec4(1.0f, 0.0f, 0.0f, 0.75f);
+				break;
+			case 2:
+				p.m_Color = vec4(0.0f, 1.0f, 0.0f, 0.75f);
+				break;
+			case 3:
+				p.m_Color = vec4(0.0f, 0.0f, 1.0f, 0.75f);
+				break;
+			case 4:
+				p.m_Color = vec4(0.0f, 0.0f, 0.0f, 0.75f);
+				break;
+			case 5:
+				p.m_Color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+				break;
+			}
+		}
 		m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
 	}
 }
@@ -207,6 +293,11 @@ void CEffects::Explosion(vec2 Pos)
 	p.m_StartSize = 150.0f;
 	p.m_EndSize = 0;
 	p.m_Rot = frandom()*pi*2;
+	if (g_Config.m_GfxEyeCandy)
+	{
+		p.m_LifeSpan = 0.6f;
+		p.m_StartSize = 200.0f;
+	}
 	m_pClient->m_pParticles->Add(CParticles::GROUP_EXPLOSIONS, &p);
 	
 	// add the smoke
@@ -241,6 +332,73 @@ void CEffects::HammerHit(vec2 Pos)
 	p.m_Rot = frandom()*pi*2;
 	m_pClient->m_pParticles->Add(CParticles::GROUP_EXPLOSIONS, &p);	
 	m_pClient->m_pSounds->Play(CSounds::CHN_WORLD, SOUND_HAMMER_HIT, 1.0f, Pos);
+}
+
+
+void CEffects::WeaponShine(vec2 Pos, vec2 Size)
+{
+	if(!m_Add100hz && g_Config.m_GfxEyeCandy)
+		return;
+	
+	CParticle p;
+	p.SetDefault();
+	p.m_Spr = SPRITE_PART_SLICE;
+	p.m_Pos = Pos + vec2((frandom()-0.5f) * Size.x, (frandom()-0.5f) * Size.y);
+	p.m_Vel = vec2(0, 0);
+	p.m_Gravity = -100;
+	p.m_LifeSpan = 7.0f / 10.0f;
+	p.m_Color = vec4(frandom()*0.5f + 0.5f,frandom()*0.5f + 0.5f,frandom()*0.5f + 0.5f,0.5f);
+	p.m_StartSize = 18.0f;
+	p.m_EndSize = 0;
+	p.m_Rot = frandom()*pi*2;
+	p.m_Rotspeed = pi*2;
+	p.m_Friction = 0.9f;
+	p.m_FlowAffected = 0.0f;
+	m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
+}
+
+void CEffects::RedFlagShine(vec2 Pos, vec2 Size)
+{
+	if(!m_Add100hz && g_Config.m_GfxEyeCandy)
+		return;
+	
+	CParticle p;
+	p.SetDefault();
+	p.m_Spr = SPRITE_PART_SLICE;
+	p.m_Pos = Pos + vec2((frandom()-0.5f) * Size.x / 2.0f, (frandom()-0.5f) * Size.y);
+	p.m_Vel = vec2(0, 0);
+	p.m_Gravity = frandom() -170.0;
+	p.m_LifeSpan = 7.0f / 10.0f;
+	p.m_Color = vec4(frandom()*0.5f + 0.5f,frandom()*0.5f,frandom()*0.5f,0.5f);
+	p.m_StartSize = 15.0f;
+	p.m_EndSize = 0;
+	p.m_Rot = frandom()*pi*2;
+	p.m_Rotspeed = pi*2;
+	p.m_Friction = 0.9f;
+	p.m_FlowAffected = 0.0f;
+	m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
+}
+
+void CEffects::BlueFlagShine(vec2 Pos, vec2 Size)
+{
+	if(!m_Add100hz && g_Config.m_GfxEyeCandy)
+		return;
+	
+	CParticle p;
+	p.SetDefault();
+	p.m_Spr = SPRITE_PART_SLICE;
+	p.m_Pos = Pos + vec2((frandom()-0.5f) * Size.x / 2.0f, (frandom()-0.5f) * Size.y);
+	p.m_Vel = vec2(0, 0);
+	p.m_Gravity = frandom() -170.0;
+	p.m_LifeSpan = 7.0f / 10.0f;
+	p.m_Color = vec4(frandom()*0.5f,frandom()*0.5f,frandom()*0.5f + 0.5f,0.5f);
+	p.m_StartSize = 15.0f;
+	p.m_EndSize = 0;
+	p.m_Rot = frandom()*pi*2;
+	p.m_Rotspeed = pi*2;
+	p.m_Friction = 0.9f;
+	p.m_FlowAffected = 0.0f;
+	m_pClient->m_pParticles->Add(CParticles::GROUP_GENERAL, &p);
 }
 
 void CEffects::OnRender()

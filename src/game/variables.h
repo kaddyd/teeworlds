@@ -57,6 +57,7 @@ MACRO_CONFIG_INT(UiNewBackground, ui_new_background, 1, 0, 4, CFGFLAG_CLIENT|CFG
 MACRO_CONFIG_INT(GfxZoom, gfx_zoom, 100, 10, 200, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Zoom level (only for spectators and demos)")
 MACRO_CONFIG_INT(ClDetailedScoreboard, cl_detailed_scoreboard, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Detailed scoreboard")
 MACRO_CONFIG_INT(ClDetailedScoreboardFull, cl_detailed_scoreboard_full, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Show full info in detailed scoreboard")
+MACRO_CONFIG_INT(GfxEyeCandy, gfx_eye_candy, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Improved graphic effects")
 
 // server
 MACRO_CONFIG_INT(SvWarmup, sv_warmup, 0, 0, 0, CFGFLAG_SERVER, "Number of seconds to do warmup before round starts")
