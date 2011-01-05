@@ -1148,5 +1148,8 @@ seconds
 Antiping
 == Антипинг
 
+Name plates size
+== Размер ников
+
 ##### old translations #####
 

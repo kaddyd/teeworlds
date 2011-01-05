@@ -9,6 +9,7 @@
 #include <game/client/animstate.h>
 #include "nameplates.h"
 #include "controls.h"
+#include "hud.h"
 
 void CNamePlates::RenderNameplate(
 	const CNetObj_Character *pPrevChar,
@@ -33,12 +34,12 @@ void CNamePlates::RenderNameplate(
 		float tw = TextRender()->TextWidth(0, FontSize, pName, -1);
 		
 		TextRender()->TextColor(1.0f, 1.0f, 1.0f, a);
-		if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_TEAMS)
+		if(g_Config.m_ClColorNicks)
 		{
-			if(pPlayerInfo->m_Team == TEAM_RED)
-				TextRender()->TextColor(1.0f, 0.5f, 0.5f, a);
-			else if(pPlayerInfo->m_Team == TEAM_BLUE)
-				TextRender()->TextColor(0.7f, 0.7f, 1.0f, a);
+			vec3 color = m_pClient->m_pHud->GetNickColor(pPlayerInfo);
+			TextRender()->TextColor(color.r, color.g, color.b, a);
+		} else {
+			TextRender()->TextColor(1,1,1,a);
 		}
 		
 		TextRender()->Text(0, Position.x-tw/2.0f, Position.y-FontSize-38.0f, FontSize, pName, -1);

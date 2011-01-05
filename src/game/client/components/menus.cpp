@@ -25,6 +25,8 @@
 #include <game/localization.h>
 #include <mastersrv/mastersrv.h>
 
+#include <game/client/animstate.h>
+
 vec4 CMenus::ms_GuiColor;
 vec4 CMenus::ms_ColorTabbarInactiveOutgame;
 vec4 CMenus::ms_ColorTabbarActiveOutgame;
@@ -745,6 +747,11 @@ int CMenus::Render()
 		ms_ColorTabbarInactive = ms_ColorTabbarInactiveOutgame;
 		ms_ColorTabbarActive = ms_ColorTabbarActiveOutgame;
 	}
+
+	if (m_Popup != POPUP_DISCONNECTED)
+	{
+		m_ReconnectTime = 0;
+	}
 	
 	CUIRect TabBar;
 	CUIRect MainView;
@@ -823,7 +830,24 @@ int CMenus::Render()
 		{
 			pTitle = Localize("Disconnected");
 			pExtraText = Client()->ErrorString();
-			pButtonText = Localize("Ok");
+			if (g_Config.m_ClAutoReconnect)
+			{
+				int currTime = time_get();
+				if (!m_ReconnectTime)
+				{
+					m_ReconnectTime = currTime + RECONNECTION_TIME;
+				}
+				else if (currTime > m_ReconnectTime)
+				{
+					Client()->Connect(g_Config.m_UiServerAddress);
+					m_ReconnectTime = 0;
+				} else {
+					str_format(aBuf, sizeof(aBuf), Localize("Ok (%d)"), clamp<unsigned long>(m_ReconnectTime - currTime, 0, RECONNECTION_TIME));
+					pButtonText = aBuf;
+				}
+			} else {
+				pButtonText = Localize("Ok");
+			}
 			ExtraAlign = -1;
 		}
 		else if(m_Popup == POPUP_PURE)
@@ -1172,6 +1196,7 @@ void CMenus::OnStateChange(int NewState, int OldState)
 		m_DownloadLastCheckTime = time_get();
 		m_DownloadLastCheckSize = 0;
 		m_DownloadSpeed = 1.0f;
+		m_ReconnectTime = 0;
 		//client_serverinfo_request();
 	}
 	else if(NewState == IClient::STATE_CONNECTING)
@@ -1187,23 +1212,6 @@ extern "C" void font_debug_render();
 
 void CMenus::OnRender()
 {
-	/*
-	// text rendering test stuff
-	render_background();
-
-	CTextCursor cursor;
-	TextRender()->SetCursor(&cursor, 10, 10, 20, TEXTFLAG_RENDER);
-	TextRender()->TextEx(&cursor, "ようこそ - ガイド", -1);
-
-	TextRender()->SetCursor(&cursor, 10, 30, 15, TEXTFLAG_RENDER);
-	TextRender()->TextEx(&cursor, "ようこそ - ガイド", -1);
-	
-	//Graphics()->TextureSet(-1);
-	Graphics()->QuadsBegin();
-	Graphics()->QuadsDrawTL(60, 60, 5000, 5000);
-	Graphics()->QuadsEnd();
-	return;*/
-	
 	if(Client()->State() != IClient::STATE_ONLINE && Client()->State() != IClient::STATE_DEMOPLAYBACK)
 		SetActive(true);
 
@@ -1297,12 +1305,423 @@ void CMenus::OnRender()
 	m_NumInputEvents = 0;
 }
 
+void CMenus::RenderTiles(float x, float y, int tx, int ty, int tw, int th, float frac, float nudge)
+{
+	if (tw == 0 || th == 0) return;
+
+	float texsize = 1024.0f;
+	float scale = 32.0f;
+
+	float px0 = tx*(1024/16);
+	float py0 = ty*(1024/16);
+	float px1 = (tx+tw)*(1024/16)-1;
+	float py1 = (ty+th)*(1024/16)-1;
+
+	float u0 = nudge + px0/texsize+frac;
+	float v0 = nudge + py0/texsize+frac;
+	float u1 = nudge + px1/texsize-frac;
+	float v1 = nudge + py1/texsize-frac;
+
+	Graphics()->QuadsSetSubset(u0,v0,u1,v1);
+
+	IGraphics::CQuadItem QuadItem(x, y - (th - 1) * scale, scale * tw + 1, scale * th + 1);
+	Graphics()->QuadsDrawTL(&QuadItem, 1);
+}
+
 static int gs_TextureBlob = -1;
+
+static int gs_TextureSun = -1;
+static int gs_TextureTiles[4] = {-1};
+static int gs_TextureDoodads[4] = {-1};
+static int gs_TextureTee = -1;
+static int gs_TextureTeeDefault = -1;
+static int gs_TextureGame = -1;
+
+static int gs_LastUsedTexture = -1;
 
 void CMenus::RenderBackground()
 {
-	//Graphics()->Clear(1,1,1);
-	//render_sunrays(0,0);
+	// Guys, i don't know how it works
+	// I wrote that a long time ago, for Z-Pack 1
+	// And now i can change only some details... like skin loading and hammer swing
+	// So... let it works as it works
+	if (g_Config.m_UiNewBackground > 0)
+	{
+		if(gs_TextureSun == -1)
+		{
+			gs_TextureSun = Graphics()->LoadTexture("mapres/sun.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+		}
+
+		const char * m_TileTextureFilenames[4] = {
+			"mapres/grass_main.png", 
+			"mapres/jungle_main.png", 
+			"mapres/desert_main.png", 
+			"mapres/winter_main.png"
+		};
+		const char * m_DoodadTextureFilenames[4] = {
+			"mapres/grass_doodads.png", 
+			"mapres/jungle_doodads.png", 
+			"mapres/desert_main.png", 
+			"mapres/winter_doodads.png"
+		};
+
+		const vec2 m_SolidTiles[4] = {
+			vec2(1, 0),
+			vec2(1, 0),
+			vec2(1, 0),
+			vec2(1, 0)
+		};
+
+		const vec2 m_LandTiles[4][2] = {
+			{vec2(0, 1), vec2(1, 1)},
+			{vec2(0, 1), vec2(1, 1)},
+			{vec2(3, 2), vec2(1, 1)},
+			{vec2(1, 1), vec2(3, 1)}
+		};
+
+		const vec2 m_GrassTiles[4][2] = {
+			{vec2(10, 2), vec2(1, 1)},
+			{vec2(10, 2), vec2(1, 1)}, 
+			{vec2(12, 4), vec2(1, 1)},
+			{vec2(0, 0), vec2(0, 0)}
+		};
+
+
+		const vec2 m_DoodadTiles[4][11][2] =
+		{
+			{
+				{vec2(5, 1),	vec2(3, 1)},
+				{vec2(7, 2),	vec2(2, 1)},
+				{vec2(10, 0),	vec2(3, 2)},
+				{vec2(8, 3),	vec2(3, 2)},
+				{vec2(11, 3),	vec2(3, 2)},
+				{vec2(0, 3),	vec2(8, 3)},
+				{vec2(1, 0),	vec2(3, 3)},
+				{vec2(0, 6),	vec2(5, 5)},
+				{vec2(5, 6),	vec2(5, 5)},
+				{vec2(9, 5),	vec2(7, 6)},
+				{vec2(0, 11),	vec2(5, 5)}
+			},
+			{
+				{vec2(4, 0),	vec2(4, 2)},
+				{vec2(7, 2),	vec2(2, 1)},
+				{vec2(10, 0),	vec2(2, 2)},
+				{vec2(8, 3),	vec2(3, 1)},
+				{vec2(11, 3),	vec2(3, 2)},
+				{vec2(0, 3),	vec2(8, 3)},
+				{vec2(0, 0),	vec2(4, 3)},
+				{vec2(0, 6),	vec2(5, 3)},
+				{vec2(0, 9),	vec2(5, 2)},
+				{vec2(10, 11),	vec2(2, 5)},
+				{vec2(0, 11),	vec2(5, 5)}
+			},
+			{
+				{vec2(13, 0),	vec2(3, 1)},
+				{vec2(14, 2),	vec2(1, 3)},
+				{vec2(13, 5),	vec2(3, 3)},
+				{vec2(11, 6),	vec2(2, 2)},
+				{vec2(11, 5),	vec2(2, 1)},
+				{vec2(12, 4),	vec2(1, 1)},
+				{vec2(11, 8),	vec2(2, 4)},
+				{vec2(13, 8),	vec2(3, 4)},
+				{vec2(10, 10),	vec2(1, 2)},
+				{vec2(9, 11),	vec2(1, 1)},
+				{vec2(8, 6),	vec2(3, 1)},
+			},
+			{
+				{vec2(6, 6),	vec2(1, 1)},
+				{vec2(0, 1),	vec2(3, 5)},
+				{vec2(6, 0),	vec2(3, 5)},
+				{vec2(9, 0),	vec2(3, 4)},
+				{vec2(12, 0),	vec2(4, 1)},
+				{vec2(12, 1),	vec2(2, 3)},
+				{vec2(14, 1),	vec2(1, 2)},
+				{vec2(15, 1),	vec2(1, 2)},
+				{vec2(14, 3),	vec2(2, 6)},
+				{vec2(8, 4),	vec2(3, 6)},
+				{vec2(11, 4),	vec2(3, 6)}
+			}
+		};
+
+		int m_UsedTexture = g_Config.m_UiNewBackground - 1;
+
+		/*if ((m_UsedTexture < 0 || m_UsedTexture > 3) && time(0) - gs_LastBackgroundChange > Z_BackgroundChangeTime)
+		{
+			srand(time(0));
+			m_UsedTexture = (int)(rand()%4);
+			
+			gs_LastBackgroundChange = time(0);
+		}*/
+
+		if (gs_LastUsedTexture != m_UsedTexture || gs_TextureTiles[m_UsedTexture] < 1 || gs_TextureDoodads[m_UsedTexture] < 1)
+		{
+			if (gs_TextureTiles[m_UsedTexture] < 1)
+				gs_TextureTiles[m_UsedTexture] = Graphics()->LoadTexture(m_TileTextureFilenames[m_UsedTexture], IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+
+			if (gs_TextureDoodads[m_UsedTexture] < 1)
+				gs_TextureDoodads[m_UsedTexture] = Graphics()->LoadTexture(m_DoodadTextureFilenames[m_UsedTexture], IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+		}
+
+		gs_LastUsedTexture = m_UsedTexture;
+
+		if(gs_TextureTee == -1)
+		{
+			if (m_pClient->m_pSkins && m_pClient->m_pSkins->Num() > 0)
+				gs_TextureTee = m_pClient->m_pSkins->Get(rand()%m_pClient->m_pSkins->Num())->m_OrgTexture;
+			else
+			{
+				if (gs_TextureTeeDefault < 1)
+					gs_TextureTeeDefault = Graphics()->LoadTexture("skins/default.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+
+				gs_TextureTee = gs_TextureTeeDefault;
+			}
+		}
+
+		if(gs_TextureGame == -1)
+		{
+			gs_TextureGame = Graphics()->LoadTexture("game.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
+		}
+
+		float sw = 300 * Graphics()->ScreenAspect();
+		float sh = 300;
+
+		float max_size = max(sw, sh);
+		float sun_size = max_size / 3.0f;
+		float sunray_size = sun_size;
+
+		static float last_tick = 0;
+		if (last_tick == 0)
+			last_tick = Client()->LocalTime();
+		float curr_tick = Client()->LocalTime();
+		static float sun_rotation = 0.0f;
+		sun_rotation += 360.0f * (curr_tick - last_tick) / 100.0f;
+		if (sun_rotation > 90.0f)
+			sun_rotation -= 90.0f;
+		float tick_diff = curr_tick - last_tick;
+		last_tick = curr_tick;
+
+		Graphics()->MapScreen(0, 0, sw, sh);
+
+		CUIRect s = *(UI()->Screen());
+
+		Graphics()->TextureSet(-1);
+		Graphics()->QuadsBegin();
+			Graphics()->SetColor(0.25f, 0.5f, 1.0f, 1.0f);
+
+			IGraphics::CQuadItem QuadItem(0, 0, sw, sh);
+			Graphics()->QuadsDrawTL(&QuadItem, 1);
+		Graphics()->QuadsEnd();
+
+		Graphics()->QuadsBegin();
+			Graphics()->SetColor(1.0f, 1.0f, 0.5f, 0.25f);
+
+			vec2 raystart;
+			raystart.x = sun_size * 0.25f;
+			raystart.y = sun_size * 0.25f;
+
+			vec2 ray_e[4];
+			ray_e[0].x = raystart.x - sunray_size / 10.0f;
+			ray_e[0].y = raystart.y;
+			ray_e[1].x = raystart.x + sunray_size / 10.0f;
+			ray_e[1].y = raystart.y;
+			ray_e[2].x = raystart.x - sunray_size;
+			ray_e[2].y = raystart.y + max_size * 2.0f;
+			ray_e[3].x = raystart.x + sunray_size;
+			ray_e[3].y = raystart.y + max_size * 2.0f;
+
+			vec2 rays[4 * 8];
+
+			for (int i = 0; i < 4 * 8; i++)
+			{
+				float angle = (-45.0f * (i / 4) + sun_rotation) * pi / 180.0f;
+
+				rays[i].x = (ray_e[i%4].x - raystart.x) * cosf(angle) - (ray_e[i%4].y - raystart.y) * sinf(angle) + raystart.x;
+				rays[i].y = (ray_e[i%4].y - raystart.y) * cosf(angle) + (ray_e[i%4].x - raystart.x) * sinf(angle) + raystart.y;
+			}
+
+			for (int i = 0; i < 4 * 8; i += 4)
+			{
+				IGraphics::CFreeformItem Freeform(
+					rays[i].x, rays[i].y,
+					rays[i + 1].x, rays[i + 1].y,
+					rays[i + 2].x, rays[i + 2].y,
+					rays[i + 3].x, rays[i + 3].y
+				);
+				Graphics()->QuadsDrawFreeform(&Freeform, 1);
+			}
+		Graphics()->QuadsEnd();
+
+		Graphics()->TextureSet(gs_TextureSun);
+		Graphics()->QuadsBegin();
+			Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+			Graphics()->QuadsSetRotation(sinf(curr_tick * 0.5f) * 0.5f - 0.25f);
+
+			QuadItem = IGraphics::CQuadItem(-sun_size * 0.25, -sun_size * 0.25, sun_size * 1.25, sun_size * 1.25);
+			Graphics()->QuadsDrawTL(&QuadItem, 1);
+		Graphics()->QuadsEnd();
+
+
+		{
+			CUIRect screen = *(UI()->Screen());
+			Graphics()->MapScreen(screen.x, screen.y, screen.w, screen.h);
+		}
+
+		Graphics()->TextureSet(gs_TextureTiles[m_UsedTexture]);
+
+		float scale = 32.0f;
+
+		float screen_x0, screen_y0, screen_x1, screen_y1;
+		Graphics()->GetScreen(&screen_x0, &screen_y0, &screen_x1, &screen_y1);
+
+		sw = screen_x1 - screen_x0;
+		sh = screen_y1 - screen_y0;
+
+		float tile_pixelsize = 1024/32.0f;
+		float final_tilesize = scale/sw * Graphics()->ScreenWidth();
+		float final_tilesize_scale = final_tilesize/tile_pixelsize;
+
+		float texsize = 1024.0f;
+		float frac = (1.25f/texsize) * (1/final_tilesize_scale);
+		float nudge = (0.5f/texsize) * (1/final_tilesize_scale);
+
+		int tx = 0;
+		int ty = 1;
+
+		int px0 = tx*(1024/16);
+		int py0 = ty*(1024/16);
+		int px1 = (tx+1)*(1024/16)-1;
+		int py1 = (ty+1)*(1024/16)-1;
+
+		float u0 = nudge + px0/texsize+frac;
+		float v0 = nudge + py0/texsize+frac;
+		float u1 = nudge + px1/texsize-frac;
+		float v1 = nudge + py1/texsize-frac;
+
+		float tcx = -((int)(curr_tick * scale))%((int)(scale));
+		float gcx = m_GrassTiles[m_UsedTexture][1].x > 0 ? -((int)(curr_tick * scale))%((int)(scale * m_GrassTiles[m_UsedTexture][1].x)) : 0;
+		float c_x = -((int)(curr_tick * scale))%((int)(scale * m_LandTiles[m_UsedTexture][1].x));
+		float t_y = sh * 0.75f;
+
+		Graphics()->QuadsBegin();
+			Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+			Graphics()->QuadsSetSubset(u0,v0,u1,v1);
+
+			for (int i = 0; i < sw / scale + 1; i++)
+			{
+				RenderTiles(c_x + i * scale * m_LandTiles[m_UsedTexture][1].x, t_y, m_LandTiles[m_UsedTexture][0].x, m_LandTiles[m_UsedTexture][0].y, m_LandTiles[m_UsedTexture][1].x, m_LandTiles[m_UsedTexture][1].y, nudge, frac);
+			}
+
+			t_y += m_LandTiles[m_UsedTexture][1].y * scale;
+
+			tx = m_SolidTiles[m_UsedTexture].x;
+			ty = m_SolidTiles[m_UsedTexture].y;
+			px0 = tx*(1024/16);
+			py0 = ty*(1024/16);
+			px1 = (tx+1)*(1024/16)-1;
+			py1 = (ty+1)*(1024/16)-1;
+
+			u0 = nudge + px0/texsize+frac;
+			v0 = nudge + py0/texsize+frac;
+			u1 = nudge + px1/texsize-frac;
+			v1 = nudge + py1/texsize-frac;
+
+			Graphics()->QuadsSetSubset(u0,v0,u1,v1);
+
+			for (int i = 0; i < sw / scale + 1 + m_LandTiles[m_UsedTexture][1].x; i++)
+			{
+				for (int j = 0; j < (sh - t_y) / scale; j++)
+				{
+					IGraphics::CQuadItem QuadItem(c_x + i * scale, t_y + j * scale, scale, scale);
+					Graphics()->QuadsDrawTL(&QuadItem, 1);
+				}
+			}
+		Graphics()->QuadsEnd();
+
+		Graphics()->TextureSet(gs_TextureDoodads[m_UsedTexture]);
+
+		t_y = sh * 0.75f - scale;
+
+		static int doodads[11] = {-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100};
+
+		static float old_c_x = 0.0f;
+		bool moved = (old_c_x < tcx);
+		old_c_x = tcx;
+
+		for (int i = 0; i < 11; i++)
+		{
+			if (doodads[i] <= -10)
+			{
+				if (doodads[i] > -100)
+					doodads[i] = (int)(sw / scale + (frandom() * sw * 2.0f / scale));
+				else
+					doodads[i] = (int)((frandom() * sw * 2.0f / scale));
+			}
+
+			if (moved) doodads[i]--;
+		}
+
+		Graphics()->QuadsBegin();
+			Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+			if (m_GrassTiles[m_UsedTexture][1].x > 0)
+				for (int i = 0; i < sw / scale + 1; i++)
+				{
+					RenderTiles(gcx + i * scale * m_GrassTiles[m_UsedTexture][1].x, t_y, m_GrassTiles[m_UsedTexture][0].x, m_GrassTiles[m_UsedTexture][0].y, m_GrassTiles[m_UsedTexture][1].x, m_GrassTiles[m_UsedTexture][1].y, nudge, frac);
+				}
+
+			for (int i = 0; i < 11; i++)
+			{
+				RenderTiles(tcx + doodads[i] * scale, t_y, m_DoodadTiles[m_UsedTexture][i][0].x, m_DoodadTiles[m_UsedTexture][i][0].y, m_DoodadTiles[m_UsedTexture][i][1].x, m_DoodadTiles[m_UsedTexture][i][1].y, nudge, frac);
+			}
+		Graphics()->QuadsEnd();
+
+		CTeeRenderInfo render_info;
+
+		render_info.m_Texture = gs_TextureTee;
+		render_info.m_ColorBody = vec4(1,1,1,1);
+		render_info.m_ColorFeet = vec4(1,1,1,1);
+		render_info.m_GotAirJump = 0;
+		render_info.m_Size = 64.0f;
+
+
+		static float tee_x = 0.0f;
+		tee_x += tick_diff * 64.0f;
+		if (tee_x - 128.0f > sw)
+		{
+			tee_x = -256.0f;
+			gs_TextureTee = -1;
+		}
+		if (tee_x < -256.0f) tee_x = -256.0f;
+
+		vec2 tee_pos = vec2(tee_x, sh * 0.75f - 16.0f);
+
+		float walk_time = fmod(tee_x * 4.0f, 100.0f)/100.0f;
+		CAnimState state;
+		state.Set(&g_pData->m_aAnimations[ANIM_BASE], 0);
+		state.Add(&g_pData->m_aAnimations[ANIM_WALK], walk_time, 1.0f);
+
+		float ct = fabs(sin(curr_tick) * 0.25f);
+		state.Add(&g_pData->m_aAnimations[ANIM_HAMMER_SWING], clamp(ct*5.0f,0.0f,1.0f), 1.0f);
+
+		Graphics()->TextureSet(gs_TextureGame);
+		Graphics()->QuadsBegin();
+
+		RenderTools()->SelectSprite(g_pData->m_Weapons.m_aId[WEAPON_HAMMER].m_pSpriteBody, 0);
+
+		vec2 p = tee_pos + vec2(state.GetAttach()->m_X, state.GetAttach()->m_Y);
+		p.y += g_pData->m_Weapons.m_aId[WEAPON_HAMMER].m_Offsety;
+
+		Graphics()->QuadsSetRotation(-pi/2+state.GetAttach()->m_Angle*pi*2);
+
+		RenderTools()->DrawSprite(p.x, p.y, g_pData->m_Weapons.m_aId[WEAPON_HAMMER].m_VisualSize);
+		Graphics()->QuadsEnd();
+
+		RenderTools()->RenderTee(&state, &render_info, 0, vec2(1.0f, 0.0f), tee_pos);
+
+		return;
+	}
+	
 	if(gs_TextureBlob == -1)
 		gs_TextureBlob = Graphics()->LoadTexture("blob.png", IStorage::TYPE_ALL, CImageInfo::FORMAT_AUTO, 0);
 
