@@ -231,6 +231,10 @@ void CGameClient::OnInit()
 	// set the language
 	g_Localization.Load(g_Config.m_ClLanguagefile, Storage(), Console());
 	
+	m_Average_Prediction_Offset = -1;
+	m_Prediction_Offset_Summ = 0;
+	m_Prediction_Offset_Count = 0;
+	
 	// init all components
 	for(int i = 0; i < m_All.m_Num; i++)
 		m_All.m_paComponents[i]->OnInit();

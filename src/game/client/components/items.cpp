@@ -4,6 +4,7 @@
 #include <engine/demo.h>
 #include <game/generated/protocol.h>
 #include <game/generated/client_data.h>
+#include <engine/shared/config.h>
 
 #include <game/gamecore.h> // get_angle
 #include <game/client/gameclient.h>
@@ -47,6 +48,97 @@ void CItems::RenderProjectile(const CNetObj_Projectile *pCurrent, int ItemId)
 	vec2 PrevPos = CalcPos(StartPos, StartVel, Curvature, Speed, Ct-0.001f);
 
 
+	// Draw shadows of grenades
+	bool LocalPlayerInGame = m_pClient->m_aClients[m_pClient->m_Snap.m_LocalCid].m_Team != -1;
+	int explode = 0; // explode detecting
+	
+	if(g_Config.m_AntiPing && g_Config.m_AntiPingGrenade && g_Config.m_AntiPingOnlyIfBigLatency && (g_Config.m_AntiPingLatency <= m_pClient->m_Snap.m_pLocalInfo->m_Latency) && pCurrent->m_Type == WEAPON_GRENADE && LocalPlayerInGame && !m_pClient->m_Snap.m_pGameobj->m_GameOver)
+	{
+		Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
+		Graphics()->QuadsBegin();
+		
+		// Calculate average prediction offset, because client_predtick() gets varial values :(((
+		// Must be there is a normal way to realize it, but I'm too lazy to find it. 
+		if (m_pClient->m_Average_Prediction_Offset == -1)
+		{
+			int Offset = Client()->PredGameTick() - Client()->GameTick();
+			m_pClient->m_Prediction_Offset_Summ += Offset;
+			m_pClient->m_Prediction_Offset_Count++;
+			
+			if (m_pClient->m_Prediction_Offset_Count >= 100)
+			{
+				m_pClient->m_Average_Prediction_Offset = round((float)m_pClient->m_Prediction_Offset_Summ / m_pClient->m_Prediction_Offset_Count);
+			}
+		}
+		
+		// Draw shadow only if grenade directed to local player (optionaly)
+		int LocalCid = m_pClient->m_Snap.m_LocalCid;
+		CNetObj_CharacterCore& CurChar = m_pClient->m_Snap.m_aCharacters[LocalCid].m_Cur;
+		CNetObj_CharacterCore& PrevChar = m_pClient->m_Snap.m_aCharacters[LocalCid].m_Prev;
+		vec2 ServerPos = mix(vec2(PrevChar.m_X, PrevChar.m_Y), vec2(CurChar.m_X, CurChar.m_Y), Client()->IntraGameTick());
+		
+		bool GrenadeIsDirectedToLocalPlayer = true; 
+		if (g_Config.m_AntiPingGrenadeSide)
+		{
+			float d1 = fabs(distance(Pos, ServerPos));
+			float d2 = fabs(distance(PrevPos, ServerPos));
+			bool GrenadeIsDirectedToLocalPlayer = d1 < d2;
+		}
+		
+		// Detect explode
+		int PredictedTick = Client()->PrevGameTick() + m_pClient->m_Average_Prediction_Offset;
+		float PredictedCt = (PredictedTick - pCurrent->m_StartTick)/(float)SERVER_TICK_SPEED + Client()->GameTickTime();
+		vec2 PredictedPos;
+		vec2 PrevPredictedPos;
+		
+		if (g_Config.m_AntiPingGrenadeExpl)
+		{
+			// grenade explode on collisions
+			float eps=g_Config.m_AntiPingGrenadeEps*0.0001f;
+			for (int i=0; (Ct+i*eps<PredictedCt)&&!explode; i++)
+			{
+				PredictedPos = CalcPos(StartPos, StartVel, Curvature, Speed, Ct+i*eps);
+				PrevPredictedPos = CalcPos(StartPos, StartVel, Curvature, Speed,  Ct+(i-1)*eps);
+				if (Collision()->IntersectLine(PrevPredictedPos, PredictedPos, &PredictedPos, 0))
+					explode=1;
+			}
+			
+			// grenade explode if TimeSpan>GrenadeLifetime
+			if (((PredictedTick-pCurrent->m_StartTick)/(float)SERVER_TICK_SPEED)>m_pClient->m_Tuning.m_GrenadeLifetime)
+				explode=2;
+				
+			// Render explode
+			if (explode==1)
+			{
+				m_pClient->m_pEffects->FakeExplosion(PredictedPos);
+			}
+			else if (explode==2)
+			{
+				float ExplodeCt=m_pClient->m_Tuning.m_GrenadeLifetime;
+				PredictedPos = CalcPos(StartPos, StartVel, Curvature, Speed, ExplodeCt);
+				m_pClient->m_pEffects->FakeExplosion(PredictedPos);
+			}
+		}
+		
+		if (m_pClient->m_Average_Prediction_Offset != -1 && GrenadeIsDirectedToLocalPlayer && !explode && PredictedCt >= 0)
+		{
+			PredictedPos = CalcPos(StartPos, StartVel, Curvature, Speed, PredictedCt);
+			PrevPredictedPos = CalcPos(StartPos, StartVel, Curvature, Speed, PredictedCt-0.001f);
+			int shadow_type = pCurrent->m_Type; 
+			Graphics()->SetColor(0, 1, 0, 0.75f); 
+			RenderTools()->SelectSprite(g_pData->m_Weapons.m_aId[clamp(shadow_type, 0, NUM_WEAPONS-1)].m_pSpriteProj);
+			IGraphics::CQuadItem QuadItem(PredictedPos.x, PredictedPos.y, 28, 28);
+			Graphics()->QuadsDraw(&QuadItem, 1);
+		}
+		
+		Graphics()->QuadsSetRotation(0);
+		Graphics()->QuadsEnd();
+	}
+	
+	if (!(g_Config.m_AntiPingShowGrenadeIfExplode || explode==0 || pCurrent->m_Type != WEAPON_GRENADE))
+		return;
+	
+	// draw original particle
 	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
 	Graphics()->QuadsBegin();
 	

@@ -136,6 +136,10 @@ public:
 
 	CSnapState m_Snap;
 	
+	int m_Average_Prediction_Offset;
+	int m_Prediction_Offset_Summ;
+	int m_Prediction_Offset_Count;
+	
 	// client data
 	struct CClientData
 	{
@@ -156,6 +160,8 @@ public:
 		CTeeRenderInfo m_RenderInfo; // this is what we use
 		
 		float m_Angle;
+		
+		vec2 m_PreviousPrediction;
 
 		int m_LastTeam;
 

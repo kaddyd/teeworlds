@@ -800,9 +800,16 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 {
 	CUIRect List, Button, Label, Left, Right;
 	MainView.HSplitBottom(10.0f, &MainView, 0);
-	MainView.HSplitBottom(70.0f, &MainView, &Left);
+	MainView.HSplitBottom(90.0f, &MainView, &Left);
 	Left.VSplitMid(&Left, &Right);
 	MainView.HSplitBottom(20.0f, &List, &MainView);
+
+	Left.HSplitTop(20.0f, &Button, &Left);
+	{
+		if(DoButton_CheckBox(&g_Config.m_AntiPing, Localize("Antiping"), g_Config.m_AntiPing, &Button))
+			g_Config.m_AntiPing ^= 1;
+	}
+	Right.HSplitTop(20.0f, &Button, &Right);
 
 	// auto demo settings
 	{

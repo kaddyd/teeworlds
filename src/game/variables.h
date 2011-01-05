@@ -58,6 +58,15 @@ MACRO_CONFIG_INT(GfxZoom, gfx_zoom, 100, 10, 200, CFGFLAG_CLIENT|CFGFLAG_SAVE, "
 MACRO_CONFIG_INT(ClDetailedScoreboard, cl_detailed_scoreboard, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Detailed scoreboard")
 MACRO_CONFIG_INT(ClDetailedScoreboardFull, cl_detailed_scoreboard_full, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Show full info in detailed scoreboard")
 MACRO_CONFIG_INT(GfxEyeCandy, gfx_eye_candy, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Improved graphic effects")
+MACRO_CONFIG_INT(AntiPing, cl_antiping, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping")
+MACRO_CONFIG_INT(AntiPingGrenade, cl_antiping_grenade, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: weapon. 0 - no antiping, 1 - grenade + shadow")
+MACRO_CONFIG_INT(AntiPingGrenadeExpl, cl_antiping_explode, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: show predicted explode")
+MACRO_CONFIG_INT(AntiPingGrenadeEps, cl_antiping_grenade_eps, 100, 0, 10000, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: eps=config_eps/10000")
+MACRO_CONFIG_INT(AntiPingGrenadeSide, cl_antiping_grenade_side, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: grenade. Work from only player side")
+MACRO_CONFIG_INT(AntiPingShowGrenadeIfExplode, cl_antiping_show_grenade_ifexplode, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: show grenade if predict explode")
+MACRO_CONFIG_INT(AntiPingPlayers, cl_antiping_players, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: players")
+MACRO_CONFIG_INT(AntiPingOnlyIfBigLatency, cl_antiping_optimized, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: works only if latency is big")
+MACRO_CONFIG_INT(AntiPingLatency, cl_antiping_optimized_latency, 100, 0, 999, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: works only if latency is bigger than this value")
 
 // server
 MACRO_CONFIG_INT(SvWarmup, sv_warmup, 0, 0, 0, CFGFLAG_SERVER, "Number of seconds to do warmup before round starts")

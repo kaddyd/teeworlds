@@ -18,6 +18,7 @@ public:
 	void SmokeTrail(vec2 Pos, vec2 Vel);
 	void SkidTrail(vec2 Pos, vec2 Vel);
 	void Explosion(vec2 Pos);
+	void FakeExplosion(vec2 Pos);
 	void HammerHit(vec2 Pos);
 	void AirJump(vec2 Pos);
 	void DamageIndicator(vec2 Pos, vec2 Dir);

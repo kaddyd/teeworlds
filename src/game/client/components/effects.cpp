@@ -318,6 +318,21 @@ void CEffects::Explosion(vec2 Pos)
 	}
 }
 
+void CEffects::FakeExplosion(vec2 Pos)
+{
+	// add the explosion
+	CParticle p;
+	p.SetDefault();
+	p.m_Spr = SPRITE_PART_EXPL01;
+	p.m_Pos = Pos;
+	p.m_LifeSpan = 0.02f;
+	p.m_StartSize = 150.0f;
+	p.m_EndSize = 0;
+	p.m_Rot = 0;
+	p.m_Rotspeed = 0;
+	p.m_Color = vec4(0.05f,1.0f,0.05f,1.0f);
+	m_pClient->m_pParticles->Add(CParticles::GROUP_EXPLOSIONS, &p);
+}
 
 void CEffects::HammerHit(vec2 Pos)
 {
