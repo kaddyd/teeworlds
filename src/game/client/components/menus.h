@@ -117,7 +117,7 @@ class CMenus : public CComponent
 
 	enum
 	{
-		RECONNECTION_TIME = 5,
+		RECONNECTION_TIME = 3,
 	};
 
 	int m_GamePage;
@@ -192,7 +192,7 @@ class CMenus : public CComponent
 
 
 	// for auto-reconnect
-	int m_ReconnectTime;
+	int64 m_ReconnectTime;
 	
 	void DemolistOnUpdate(bool Reset);
 	void DemolistPopulate();

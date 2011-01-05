@@ -832,17 +832,17 @@ int CMenus::Render()
 			pExtraText = Client()->ErrorString();
 			if (g_Config.m_ClAutoReconnect)
 			{
-				int currTime = time_get();
+				int64 currTime = time_get();
 				if (!m_ReconnectTime)
 				{
-					m_ReconnectTime = currTime + RECONNECTION_TIME;
+					m_ReconnectTime = currTime + RECONNECTION_TIME * time_freq();
 				}
 				else if (currTime > m_ReconnectTime)
 				{
 					Client()->Connect(g_Config.m_UiServerAddress);
 					m_ReconnectTime = 0;
 				} else {
-					str_format(aBuf, sizeof(aBuf), Localize("Ok (%d)"), clamp<unsigned long>(m_ReconnectTime - currTime, 0, RECONNECTION_TIME));
+					str_format(aBuf, sizeof(aBuf), Localize("Ok (%d)"), clamp<int64>((m_ReconnectTime - currTime) / time_freq(), 0, RECONNECTION_TIME) + 1);
 					pButtonText = aBuf;
 				}
 			} else {
