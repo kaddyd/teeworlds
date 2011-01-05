@@ -177,7 +177,7 @@ class CTextRender : public IEngineTextRender
 		
 		mem_free(pMem);
 	}
-	
+
 	int AdjustOutlineThicknessToFontSize(int OutlineThickness, int FontSize)
 	{
 		if(FontSize > 36)
@@ -318,7 +318,6 @@ class CTextRender : public IEngineTextRender
 		
 		// adjust spacing
 		int OutlineThickness = AdjustOutlineThicknessToFontSize(1, pSizeData->m_FontSize);
-		
 		x += OutlineThickness;
 		y += OutlineThickness;
 
@@ -515,14 +514,6 @@ public:
 		SetCursor(&Cursor, 0, 0, Size, 0);
 		TextEx(&Cursor, pText, Length);
 		return Cursor.m_X;
-	}
-
-	virtual float TextHeight(void *pFontSetV, float Size, const char *pText, int Length)
-	{
-		CTextCursor Cursor;
-		SetCursor(&Cursor, 0, 0, Size, 0);
-		TextEx(&Cursor, pText, Length);
-		return Cursor.m_Y;
 	}
 	
 	virtual int TextLineCount(void *pFontSetV, float Size, const char *pText, float LineWidth)

@@ -98,30 +98,25 @@ void CMenus::RenderSettingsPlayer(CUIRect MainView)
 		if(DoButton_CheckBox(&g_Config.m_ClNameplates, Localize("Show name plates"), g_Config.m_ClNameplates, &Button))
 			g_Config.m_ClNameplates ^= 1;
 
-		//if(config.cl_nameplates)
+		LeftView.HSplitTop(20.0f, &Button, &LeftView);
+		if(g_Config.m_ClNameplates)
 		{
-			CUIRect Button;
-			LeftView.HSplitTop(20.0f, &Button, &LeftView);
 			Button.VSplitLeft(15.0f, 0, &Button);
 			if(DoButton_CheckBox(&g_Config.m_ClNameplatesAlways, Localize("Always show name plates"), g_Config.m_ClNameplatesAlways, &Button))
 				g_Config.m_ClNameplatesAlways ^= 1;
-		}
-
-		LeftView.HSplitTop(20.0f, &Button, &LeftView);
-		if (DoButton_CheckBox(&g_Config.m_ClColorNicks, Localize("Color nicks"), g_Config.m_ClColorNicks, &Button))
-			g_Config.m_ClColorNicks ^= 1;
 		
-		LeftView.HSplitTop(20.0f, &Button, &LeftView);
-		if(DoButton_CheckBox(&g_Config.m_ClDetailedScoreboard, Localize("Detailed scoreboard"), g_Config.m_ClDetailedScoreboard, &Button))
-			g_Config.m_ClDetailedScoreboard ^= 1;
-
-		{
-			CUIRect Button;
+			// draw nameplates size slider
+			CUIRect Label;
 			LeftView.HSplitTop(20.0f, &Button, &LeftView);
 			Button.VSplitLeft(15.0f, 0, &Button);
-			if(DoButton_CheckBox(&g_Config.m_ClDetailedScoreboardFull, Localize("Full detailed scoreboard"), g_Config.m_ClDetailedScoreboardFull, &Button))
-				g_Config.m_ClDetailedScoreboardFull ^= 1;
+			Button.VSplitRight(10.0f, &Button, 0);
+			Button.VSplitLeft(140.0f, &Label, &Button);
+			Button.HMargin(2.0f, &Button);
+			UI()->DoLabel(&Label, Localize("Name plates size"), 13.0f, -1);
+			g_Config.m_ClNameplatesSize = (int)(DoScrollbarH(&g_Config.m_ClNameplatesSize, &Button, g_Config.m_ClNameplatesSize/100.0f)*100.0f+0.1f);
 		}
+		else
+			LeftView.HSplitTop(20.0f, &Button, &LeftView);
 
         {
             const CSkins::CSkin *pOwnSkin = m_pClient->m_pSkins->Get(max(0, m_pClient->m_pSkins->Find(g_Config.m_PlayerSkin)));
@@ -225,7 +220,7 @@ void CMenus::RenderSettingsPlayer(CUIRect MainView)
 			}
 		}
 
-        MainView.HSplitTop(MainView.h*3/5, 0, &MainView);
+        MainView.HSplitTop(MainView.h/2, 0, &MainView);
 
 		// render skinselector
 		static bool s_InitSkinlist = true;
@@ -576,10 +571,6 @@ void CMenus::RenderSettingsGraphics(CUIRect MainView)
 	MainView.HSplitTop(20.0f, &Button, &MainView);
 	if(DoButton_CheckBox(&g_Config.m_GfxHighDetail, Localize("High Detail"), g_Config.m_GfxHighDetail, &Button))
 		g_Config.m_GfxHighDetail ^= 1;
-		
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_GfxEyeCandy, Localize("Eye Candy"), g_Config.m_GfxEyeCandy, &Button))
-		g_Config.m_GfxEyeCandy ^= 1;
 
 	// check if the new settings require a restart
 	if(CheckSettings)
@@ -625,33 +616,6 @@ void CMenus::RenderSettingsGraphics(CUIRect MainView)
 		*pColorSlider[s] = (int)(k*255.0f);
 		UI()->DoLabel(&Text, paLabels[s], 15.0f, -1);
 	}
-	
-	const char * Backgrounds[] = {
-		"Old",
-		"Grass",
-		"Jungle",
-		"Desert",
-		"Winter"
-	};
-	
-	//MainView.HSplitTop(19.0f, &Button, &MainView);
-	//Button.w -= 5.0f;
-	Button = MainView;
-	Button.HSplitTop(19.0f, 0, &Button);
-	Button.w -= 5.0f;
-	
-	static float s_BackgroundScrollValue = 0;
-	
-	UiDoListboxStart(&s_BackgroundScrollValue, &Button, 21.0f, Localize("Background"), "", 5, 1, g_Config.m_UiNewBackground, s_BackgroundScrollValue);
-	
-	for (int i = 0; i < 5; i++)
-	{
-		CListboxItem Item = UiDoListboxNextItem(&Backgrounds[i], g_Config.m_UiNewBackground == i);
-		Item.m_Rect.x += 5.0f;
-		UI()->DoLabel(&Item.m_Rect, Localize(Backgrounds[i]), 15.0f, -1);
-	}
-
-	g_Config.m_UiNewBackground = UiDoListboxEnd(&s_BackgroundScrollValue, 0);
 }
 
 void CMenus::RenderSettingsSound(CUIRect MainView)
@@ -800,16 +764,9 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 {
 	CUIRect List, Button, Label, Left, Right;
 	MainView.HSplitBottom(10.0f, &MainView, 0);
-	MainView.HSplitBottom(90.0f, &MainView, &Left);
+	MainView.HSplitBottom(70.0f, &MainView, &Left);
 	Left.VSplitMid(&Left, &Right);
 	MainView.HSplitBottom(20.0f, &List, &MainView);
-
-	Left.HSplitTop(20.0f, &Button, &Left);
-	{
-		if(DoButton_CheckBox(&g_Config.m_AntiPing, Localize("Antiping"), g_Config.m_AntiPing, &Button))
-			g_Config.m_AntiPing ^= 1;
-	}
-	Right.HSplitTop(20.0f, &Button, &Right);
 
 	// auto demo settings
 	{
