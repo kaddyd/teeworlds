@@ -960,7 +960,43 @@ no limit
 %i seconds left
 == 
 
+Antiping
+== 
+
+Background
+== 
+
+Color nicks
+== 
+
+Detailed scoreboard
+== 
+
+Eye Candy
+== 
+
+Following: %s
+== 
+
+Freeview
+== 
+
+Full detailed scoreboard
+== 
+
 Name plates size
+== 
+
+Ok (%d)
+== 
+
+Round: %d/%d
+== 
+
+Unable to delete the demo
+== 
+
+Zoom: %d
 == 
 
 ##### old translations #####

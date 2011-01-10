@@ -798,6 +798,9 @@ ZO
 Alpha value of the envelope
 == 
 
+Antiping
+== 
+
 Are you sure that you want to delete the demo?
 == 
 
@@ -808,6 +811,9 @@ Automatically record demos
 == 
 
 Automatically take game over screenshot
+== 
+
+Background
 == 
 
 Blue value of the envelope
@@ -828,10 +834,16 @@ Clip Y
 Color
 == 
 
+Color nicks
+== 
+
 Delete demo
 == 
 
 Delete this envelope
+== 
+
+Detailed scoreboard
 == 
 
 Down
@@ -846,10 +858,22 @@ Enable/disable layer for saving
 Exit
 == 
 
+Eye Candy
+== 
+
 File: %s
 == 
 
 Folder
+== 
+
+Following: %s
+== 
+
+Freeview
+== 
+
+Full detailed scoreboard
 == 
 
 Green value of the envelope
@@ -880,6 +904,9 @@ Name plates size
 == 
 
 New folder
+== 
+
+Ok (%d)
 == 
 
 Para X
@@ -927,6 +954,9 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 Rotation of the envelope
 == 
 
+Round: %d/%d
+== 
+
 Shift
 == 
 
@@ -937,6 +967,9 @@ Tiles
 == 
 
 Time limit: %d min
+== 
+
+Unable to delete the demo
 == 
 
 Up
@@ -955,6 +988,9 @@ X-axis of the envelope
 == 
 
 Y-axis of the envelope
+== 
+
+Zoom: %d
 == 
 
 [HOME] Restore map focus

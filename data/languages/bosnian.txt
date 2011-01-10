@@ -546,6 +546,9 @@ Alpha value of the envelope
 Anim
 == 
 
+Antiping
+== 
+
 Append
 == 
 
@@ -553,6 +556,9 @@ Append map
 == 
 
 Aspect ratio
+== 
+
+Background
 == 
 
 Blue value of the envelope
@@ -592,6 +598,9 @@ Color Env
 == 
 
 Color TO
+== 
+
+Color nicks
 == 
 
 Color+
@@ -639,6 +648,9 @@ Deletes the layer
 Detail
 == 
 
+Detailed scoreboard
+== 
+
 Down
 == 
 
@@ -669,6 +681,9 @@ Exits from the editor
 External
 == 
 
+Eye Candy
+== 
+
 File
 == 
 
@@ -676,6 +691,15 @@ File: %s
 == 
 
 Filename:
+== 
+
+Following: %s
+== 
+
+Freeview
+== 
+
+Full detailed scoreboard
 == 
 
 Green value of the envelope
@@ -751,6 +775,9 @@ None
 == 
 
 Normal animation speed
+== 
+
+Ok (%d)
 == 
 
 Opens a map and adds everything from that map to the current one
@@ -840,6 +867,9 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 Rotation of the envelope
 == 
 
+Round: %d/%d
+== 
+
 Save
 == 
 
@@ -894,6 +924,9 @@ Toggle layer visibility
 Toggles the envelope editor.
 == 
 
+Unable to delete the demo
+== 
+
 Up
 == 
 
@@ -925,6 +958,9 @@ ZI
 == 
 
 ZO
+== 
+
+Zoom: %d
 == 
 
 [HOME] Restore map focus

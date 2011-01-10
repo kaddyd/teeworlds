@@ -864,10 +864,16 @@ ZO
 Alpha value of the envelope
 == 
 
+Antiping
+== 
+
 Automatically record demos
 == 
 
 Automatically take game over screenshot
+== 
+
+Background
 == 
 
 Blue value of the envelope
@@ -888,13 +894,31 @@ Clip Y
 Color
 == 
 
+Color nicks
+== 
+
 Delete demo
 == 
 
 Delete this envelope
 == 
 
+Detailed scoreboard
+== 
+
+Eye Candy
+== 
+
 File: %s
+== 
+
+Following: %s
+== 
+
+Freeview
+== 
+
+Full detailed scoreboard
 == 
 
 Green value of the envelope
@@ -913,6 +937,9 @@ Max demos
 == 
 
 Name plates size
+== 
+
+Ok (%d)
 == 
 
 Para X
@@ -942,7 +969,13 @@ Red value of the envelope
 Rotation of the envelope
 == 
 
+Round: %d/%d
+== 
+
 Shift
+== 
+
+Unable to delete the demo
 == 
 
 Up
@@ -955,6 +988,9 @@ X-axis of the envelope
 == 
 
 Y-axis of the envelope
+== 
+
+Zoom: %d
 == 
 
 [HOME] Restore map focus

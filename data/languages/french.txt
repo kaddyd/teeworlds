@@ -286,9 +286,6 @@ Grenade
 Group
 == Groupe
 
-HD
-== HD
-
 Hammer
 == Maillet
 
@@ -780,7 +777,13 @@ Adds a new quad
 Alpha value of the envelope
 == 
 
+Antiping
+== 
+
 Aspect ratio
+== 
+
+Background
 == 
 
 Blue value of the envelope
@@ -804,6 +807,9 @@ Color Env
 Color TO
 == 
 
+Color nicks
+== 
+
 Creates a new color envelope
 == 
 
@@ -822,6 +828,9 @@ Delete this envelope
 Deletes the current quad
 == 
 
+Detailed scoreboard
+== 
+
 Enable/disable group for saving
 == 
 
@@ -829,6 +838,18 @@ Enable/disable layer for saving
 == 
 
 Envelopes
+== 
+
+Eye Candy
+== 
+
+Following: %s
+== 
+
+Freeview
+== 
+
+Full detailed scoreboard
 == 
 
 Green value of the envelope
@@ -850,6 +871,9 @@ Name plates size
 == 
 
 Next Envelope
+== 
+
+Ok (%d)
 == 
 
 Para X
@@ -897,6 +921,9 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 Rotation of the envelope
 == 
 
+Round: %d/%d
+== 
+
 Shift
 == 
 
@@ -924,6 +951,9 @@ Toggle layer visibility
 Toggles the envelope editor.
 == 
 
+Unable to delete the demo
+== 
+
 Use Clipping
 == 
 
@@ -943,6 +973,9 @@ X-axis of the envelope
 == 
 
 Y-axis of the envelope
+== 
+
+Zoom: %d
 == 
 
 [HOME] Restore map focus
