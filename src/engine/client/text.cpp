@@ -354,8 +354,11 @@ class CTextRender : public IEngineTextRender
 		}
 		else
 		{
-			Grow(ms_aGlyphData, ms_aGlyphDataOutlined, SlotW, SlotH);
-			Grow(ms_aGlyphDataOutlined, ms_aGlyphData, SlotW, SlotH);
+			for(int i = OutlineThickness; i > 0; i-=2)
+			{
+				Grow(ms_aGlyphData, ms_aGlyphDataOutlined, SlotW, SlotH);
+				Grow(ms_aGlyphDataOutlined, ms_aGlyphData, SlotW, SlotH);
+			}
 			UploadGlyph(pSizeData, 1, SlotId, Chr, ms_aGlyphData);
 		}
 		
@@ -693,21 +696,20 @@ public:
 
 					if(pChr)
 					{
+						Advance = pChr->m_AdvanceX + Kerning(pFont, Character, Nextcharacter)*Scale;
+						if(pCursor->m_Flags&TEXTFLAG_STOP_AT_END && DrawX+Advance*Size-pCursor->m_StartX > pCursor->m_LineWidth)
+						{
+							// we hit the end of the line, no more to render or count
+							pCurrent = pEnd;
+							break;
+						}
+
 						if(pCursor->m_Flags&TEXTFLAG_RENDER)
 						{
 							Graphics()->QuadsSetSubset(pChr->m_aUvs[0], pChr->m_aUvs[1], pChr->m_aUvs[2], pChr->m_aUvs[3]);
 							IGraphics::CQuadItem QuadItem(DrawX+pChr->m_OffsetX*Size, DrawY+pChr->m_OffsetY*Size, pChr->m_Width*Size, pChr->m_Height*Size);
 							Graphics()->QuadsDrawTL(&QuadItem, 1);
 						}
-
-						Advance = pChr->m_AdvanceX + Kerning(pFont, Character, Nextcharacter)*Scale;
-					}
-									
-					if(pCursor->m_Flags&TEXTFLAG_STOP_AT_END && DrawX+(Advance+pChr->m_Width)*Size-pCursor->m_StartX > pCursor->m_LineWidth)
-					{
-						// we hit the end of the line, no more to render or count
-						pCurrent = pEnd;
-						break;
 					}
 
 					DrawX += Advance*Size;

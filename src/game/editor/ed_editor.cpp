@@ -774,7 +774,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
 	{
 		// do add button
 		TB_Top.VSplitLeft(10.0f, &Button, &TB_Top);
-		TB_Top.VSplitLeft(90.0f, &Button, &TB_Top);
+		TB_Top.VSplitLeft(60.0f, &Button, &TB_Top);
 		static int s_NewButton = 0;
 
 		CLayerQuads *pQLayer = (CLayerQuads *)GetSelectedLayerType(0, LAYERTYPE_QUADS);
@@ -801,7 +801,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
     
 	// tile manipulation
 	{
-		TB_Bottom.VSplitLeft(90.0f, &Button, &TB_Bottom);
+		TB_Bottom.VSplitLeft(40.0f, &Button, &TB_Bottom);
 		static int s_BorderBut = 0;
 		CLayerTiles *pT = (CLayerTiles *)GetSelectedLayerType(0, LAYERTYPE_TILES);
 		
@@ -815,7 +815,7 @@ void CEditor::DoToolbar(CUIRect ToolBar)
 	TB_Bottom.VSplitLeft(5.0f, 0, &TB_Bottom);
 
 	// refocus button
-	TB_Bottom.VSplitLeft(90.0f, &Button, &TB_Bottom);
+	TB_Bottom.VSplitLeft(50.0f, &Button, &TB_Bottom);
 	static int s_RefocusButton = 0;
 	if(DoButton_Editor(&s_RefocusButton, Localize("Refocus"), m_WorldOffsetX&&m_WorldOffsetY?0:-1, &Button, 0, Localize("[HOME] Restore map focus")) || Input()->KeyDown(KEY_HOME))
 	{
@@ -1027,8 +1027,14 @@ void CEditor::DoQuadPoint(CQuad *q, int QuadIndex, int v)
 				for(int m = 0; m < 4; m++)
 					if(m_SelectedPoints&(1<<m))
 					{
+						// 0,2;1,3 - line x 
+						// 0,1;2,3 - line y
+
 						q->m_aTexcoords[m].x += f2fx(dx*0.001f);
+						q->m_aTexcoords[(m+2)%4].x += f2fx(dx*0.001f);
+						
 						q->m_aTexcoords[m].y += f2fx(dy*0.001f);
+						q->m_aTexcoords[m^1].y += f2fx(dy*0.001f);
 					}
 			}
 		}

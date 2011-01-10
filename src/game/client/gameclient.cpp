@@ -197,6 +197,7 @@ void CGameClient::OnConsoleInit()
 	Console()->Register("broadcast", "r", CFGFLAG_SERVER, 0, 0, "Broadcast message");
 	Console()->Register("say", "r", CFGFLAG_SERVER, 0, 0, "Say in chat");
 	Console()->Register("set_team", "ii", CFGFLAG_SERVER, 0, 0, "Set team of player to team");
+	Console()->Register("set_team_all", "i", CFGFLAG_SERVER, 0, 0, "Set team of all players to team");
 	Console()->Register("addvote", "r", CFGFLAG_SERVER, 0, 0, "Add a voting option");
 	Console()->Register("vote", "r", CFGFLAG_SERVER, 0, 0, "Force a vote to yes/no");
 
@@ -226,8 +227,6 @@ void CGameClient::OnConsoleInit()
 
 void CGameClient::OnInit()
 {
-	//m_pServerBrowser = Kernel()->RequestInterface<IServerBrowser>();
-	
 	// set the language
 	g_Localization.Load(g_Config.m_ClLanguagefile, Storage(), Console());
 	
@@ -246,15 +245,17 @@ void CGameClient::OnInit()
 	int64 Start = time_get();
 	
 	// load default font	
-	static CFont *pDefaultFont;
-	//default_font = gfx_font_load("data/fonts/sazanami-gothic.ttf");
-
+	static CFont *pDefaultFont = 0;
 	char aFilename[512];
 	IOHANDLE File = Storage()->OpenFile("fonts/DroidSansFallback.ttf", IOFLAG_READ, IStorage::TYPE_ALL, aFilename, sizeof(aFilename));
 	if(File)
+	{
 		io_close(File);
-	pDefaultFont = TextRender()->LoadFont(aFilename);
-	TextRender()->SetDefaultFont(pDefaultFont);
+		pDefaultFont = TextRender()->LoadFont(aFilename);
+		TextRender()->SetDefaultFont(pDefaultFont);
+	}
+	if(!pDefaultFont)
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "gameclient", "failed to load font. filename='fonts/DejaVuSans.ttf'");
 
 	g_Config.m_ClThreadsoundloading = 0;
 
@@ -272,8 +273,8 @@ void CGameClient::OnInit()
 		gs_LoadCurrent++;
 	}
 
+	// load skins
 	::gs_Skins.Init();
-	
 	
 	// TODO: Refactor: fix threaded loading of sounds again
 	// load sounds
@@ -285,8 +286,8 @@ void CGameClient::OnInit()
 				g_GameClient.m_pMenus->RenderLoading(gs_LoadCurrent/(float)gs_LoadTotal);
 			for(int i = 0; i < g_pData->m_aSounds[s].m_NumSounds; i++)
 			{
-				int id = Sound()->LoadWV(g_pData->m_aSounds[s].m_aSounds[i].m_pFilename);
-				g_pData->m_aSounds[s].m_aSounds[i].m_Id = id;
+				int Id = Sound()->LoadWV(g_pData->m_aSounds[s].m_aSounds[i].m_pFilename);
+				g_pData->m_aSounds[s].m_aSounds[i].m_Id = Id;
 			}
 
 			if(DoRender)
@@ -688,6 +689,12 @@ void CGameClient::OnGameOver()
 		Client()->AutoScreenshot_Start();
 }
 
+void CGameClient::OnStartGame()
+{
+	if(Client()->State() != IClient::STATE_DEMOPLAYBACK)
+		Client()->DemoRecorder_HandleAutoStart();
+}
+
 void CGameClient::OnRconLine(const char *pLine)
 {
 	m_pGameConsole->PrintLine(CGameConsole::CONSOLETYPE_REMOTE, pLine);
@@ -878,6 +885,8 @@ void CGameClient::OnNewSnapshot()
 				m_Snap.m_pGameobj = (CNetObj_Game *)pData;
 				if(s_GameOver == 0 && m_Snap.m_pGameobj->m_GameOver != 0)
 					OnGameOver();
+				else if(s_GameOver != 0 && m_Snap.m_pGameobj->m_GameOver == 0)
+					OnStartGame();
 				s_GameOver = m_Snap.m_pGameobj->m_GameOver;
 			}
 			else if(Item.m_Type == NETOBJTYPE_FLAG)

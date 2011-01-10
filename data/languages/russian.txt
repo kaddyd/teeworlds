@@ -10,143 +10,6 @@
 %ds left
 == осталось %d сек.
 
-Please wait
-== Подождите
-
-%d minute(s)
-== %d минут
-
-%d second(s)
-== %d секунд
-
-%d/%d KiB
-== %d/%d кб
-
-%d/%d KiB (%.1f KiB/sec)
-== %d/%d кб (%.1f кб/сек)
-
-# Уродливо? Да. Надо будет добавить хоть чуть-чуть логики в локализацию, потому что изменять что-то в коде специально для русского языка - это как-то не профит =\
-
-1 минут
-== 1 минуту
-
-2 минут
-== 2 минуты
-
-3 минут
-== 3 минуты
-
-4 минут
-== 4 минуты
-
-1 секунд
-== 1 секунду
-
-2 секунд
-== 2 секунды
-
-3 секунд
-== 3 секунды
-
-4 секунд
-== 4 секунды
-
-21 минут
-== 21 минуту
-
-22 минут
-== 22 минуты
-
-23 минут
-== 23 минуты
-
-24 минут
-== 24 минуты
-
-21 секунд
-== 21 секунду
-
-22 секунд
-== 22 секунды
-
-23 секунд
-== 23 секунды
-
-24 секунд
-== 24 секунды
-
-31 минут
-== 31 минуту
-
-32 минут
-== 32 минуты
-
-33 минут
-== 33 минуты
-
-34 минут
-== 34 минуты
-
-31 секунд
-== 31 секунду
-
-32 секунд
-== 32 секунды
-
-33 секунд
-== 33 секунды
-
-34 секунд
-== 34 секунды
-
-41 минут
-== 41 минуту
-
-42 минут
-== 42 минуты
-
-43 минут
-== 43 минуты
-
-44 минут
-== 44 минуты
-
-41 секунд
-== 41 секунду
-
-42 секунд
-== 42 секунды
-
-43 секунд
-== 43 секунды
-
-44 секунд
-== 44 секунды
-
-51 минут
-== 51 минуту
-
-52 минут
-== 52 минуты
-
-53 минут
-== 53 минуты
-
-54 минут
-== 54 минуты
-
-51 секунд
-== 51 секунду
-
-52 секунд
-== 52 секунды
-
-53 секунд
-== 53 секунды
-
-54 секунд
-== 54 секунды
-
 %s Right click for context menu.
 == %s Правая кнопка мыши для контекстного меню
 
@@ -204,9 +67,6 @@ Are you sure that you want to quit?
 As this is the first time you launch the game, please enter your nick name below. It's recommended that you check the settings to adjust them to your liking before joining a server.
 == Так как это ваш первый запуск игры, пожалуйста, введите свой ник в поле ниже. Также рекоммендуется проверить настройки игры и поменять некоторые из них перед тем, как начать играть.
 
-Automatically record demos
-== Автоматически записывать демо
-
 Blue team
 == Синие
 
@@ -249,9 +109,6 @@ Color TO
 Color+
 == Цвет+
 
-Color nicks
-== Цветные ники
-
 Compatible version
 == Совместимая версия
 
@@ -259,7 +116,7 @@ Connect
 == Подключиться
 
 Connecting to
-== Соединение с сервером
+== Подключение к
 
 Connection Problems...
 == Проблемы со связью...
@@ -323,12 +180,6 @@ Demos
 
 Detail
 == Детальный
-
-Detailed scoreboard
-== Детальное табло
-
-Full detailed scoreboard
-== Полное детальное табло
 
 Disconnect
 == Отключить
@@ -484,7 +335,7 @@ Join blue
 == За синих
 
 Join game
-== Играть
+== Наблюдать
 
 Join red
 == За красных
@@ -597,9 +448,6 @@ Normal animation speed
 Ok
 == Ок
 
-Ok (%d)
-== Ок (%d)
-
 Open
 == Открыть
 
@@ -668,9 +516,6 @@ Quit
 
 Reason:
 == Причина:
-
-Record demo
-== Запись демо
 
 Red team
 == Красные
@@ -819,9 +664,6 @@ Standard gametype
 Standard map
 == Стандартная карта
 
-Stop record
-== Стоп записи
-
 Sudden Death
 == Быстрая смерть
 
@@ -849,8 +691,8 @@ Texture Compression
 The server is running a non-standard tuning on a pure game type.
 == Сервер запущен с нестандартными настройками на стандартном типе игры.
 
-Time limit: %d min
-== Лимит: %d мин.
+Time limit
+== Лимит
 
 Toggle group visibility
 == Переключить видимость группы
@@ -862,7 +704,7 @@ Toggles the envelope editor.
 == Показать или скрыть редактор кривых
 
 Try again
-== Войти
+== Попробовать снова
 
 Type
 == Тип
@@ -885,14 +727,8 @@ V-Sync
 Version
 == Версия
 
-Vote No
-== Против
-
 Vote no
 == Против
-
-Vote Yes
-== За
 
 Vote yes
 == За
@@ -927,9 +763,6 @@ ZI
 ZO
 == Z-
 
-Zoom: %d
-== Масштаб: %d%%
-
 [M] Flip brush vertical
 == [M] Зеркалировать кисть по вертикали
 
@@ -962,194 +795,173 @@ Zoom: %d
 
 ##### needs translation #####
 
+%i minute left
+== 
+
+%i minutes left
+== 
+
+%i second left
+== 
+
+%i seconds left
+== 
+
 Alpha value of the envelope
-== Прозрачность кривой
+== 
 
 Are you sure that you want to delete the demo?
-== Вы действительно хотите удалить эту демо?
+== 
 
 Aspect ratio
-== Соотношение сторон
+== 
 
 Automatically record demos
-== Автоматически записывать демо
+== 
 
 Automatically take game over screenshot
-== Автоматически снимать скриншоты в конце игры
+== 
 
 Blue value of the envelope
-== Значение синего у кривой
+== 
 
 Clip H
-== Высота обрезаемой области
+== 
 
 Clip W
-== Ширина обрезаемой области
+== 
 
 Clip X
-== Позиция слева у обрезаемой области
+== 
 
 Clip Y
-== Позиция сверху у обрезаемой области
+== 
 
 Color
-== Цвет
+== 
 
 Delete demo
-== Удалить
+== 
 
 Delete this envelope
-== Удалить кривую
+== 
 
 Down
-== Вниз
+== 
 
 Enable/disable group for saving
-== Разрешить/запретить сохранение группы
+== 
 
 Enable/disable layer for saving
-== Разрешить/запретить сохранение слоя
+== 
 
 File: %s
-== Файл: %s
+== 
 
 Folder
-== Папка
+== 
 
 Green value of the envelope
-== Значение зеленого у кривой
+== 
 
 Invalid Demo
-== Неправильное демо
+== 
 
 Left
-== Влево
+== 
 
 Left mouse to drag. Hold ctrl to be more precise. Hold shift to alter time point aswell. Right click to delete.
-== Левая клавиша для перемещения. Зажмите Ctrl для большей точности. Зажмите Shift для изменения момента времени. Правый клик для удаления.
+== 
 
 Load map
-== Загрузить карту
+== 
 
 Max Screenshots
-== Макс. кол-во скриншотов
+== 
 
 Max demos
-== Макс. кол-во демо
-
-New folder
-== Новая папка
-
-Para X
-== Пара. X
-
-Para Y
-== Пара. Y
-
-Parent Folder
-== Родительская папка
-
-Pos X
-== Поз. X
-
-Pos Y
-== Поз. Y
-
-Quads
-== Квады
-
-REC
-== REC
-
-Record demo
-== Запись демо
-
-Red value of the envelope
-== Значение красного у кривой
-
-Resizes the current Quad based on the aspect ratio of the image
-== Изменить размер квада под размер изображения
-
-Right
-== Вправо
-
-Rotation of the brush in degrees. Use left mouse button to drag and change the value. Hold shift to be more precise.
-== Поворот кисти в градусах. Левая клавиша для перемещения и изменения значения. Зажмите Shift для большей точности.
-
-Rotation of the envelope
-== Поворот кривой
-
-Shift
-== Смещение 
-
-Stop record
-== Стоп записи
-
-Tiles
-== Тайлы
-
-Up
-== Вверх
-
-Use Clipping
-== Обрезать
-
-Use left mouse button to drag and change the color value. Hold shift to be more precise.
-== Левая клавиша для перемещения и изменения цвета. Зажмите Shift для большей точности.
-
-Use left mouse button to drag and change the value. Hold shift to be more precise.
-== Левая клавиша для перемещения и изменения значения. Зажмите Shift для большей точности.
-
-X-axis of the envelope
-== Горизонталь кривой
-
-Y-axis of the envelope
-== Вертикаль кривой
-
-[HOME] Restore map focus
-== [HOME] Восстановить фокусировку карты
-
-Background
-== Фон
-
-Old
-== Старый
-
-Grass
-== Трава
-
-Jungle
-== Джунгли
-
-Winter
-== Зима
-
-Desert
-== Пустыня
-
-left
-== осталось
-
-minute
-== минута
-
-minutes
-== минут
-
-no limit
-== нет лимита
-
-second
-== секунда
-
-seconds
-== секунд
-
-Antiping
-== Антипинг
+== 
 
 Name plates size
-== Размер ников
+== 
+
+New folder
+== 
+
+Para X
+== 
+
+Para Y
+== 
+
+Parent Folder
+== 
+
+Pos X
+== 
+
+Pos Y
+== 
+
+Quads
+== 
+
+REC
+== 
+
+Record demo
+== 
+
+Red value of the envelope
+== 
+
+Resizes the current Quad based on the aspect ratio of the image
+== 
+
+Right
+== 
+
+Rotation of the brush in degrees. Use left mouse button to drag and change the value. Hold shift to be more precise.
+== 
+
+Rotation of the envelope
+== 
+
+Shift
+== 
+
+Stop record
+== 
+
+Tiles
+== 
+
+Time limit: %d min
+== 
+
+Up
+== 
+
+Use Clipping
+== 
+
+Use left mouse button to drag and change the color value. Hold shift to be more precise.
+== 
+
+Use left mouse button to drag and change the value. Hold shift to be more precise.
+== 
+
+X-axis of the envelope
+== 
+
+Y-axis of the envelope
+== 
+
+[HOME] Restore map focus
+== 
+
+no limit
+== 
 
 ##### old translations #####
 
