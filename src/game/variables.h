@@ -101,3 +101,5 @@ MACRO_CONFIG_INT(ClColorNicks, cl_color_nicks, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_S
 
 MACRO_CONFIG_INT(ClChatTranslate, cl_chat_translate, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Translate chat lines via Google Translate")
 MACRO_CONFIG_STR(ClChatTranslateTarget, cl_chat_translate_target, 8, "", CFGFLAG_CLIENT|CFGFLAG_SAVE, "Language code for translate (see http://goo.gl/Gj6Hr for supported languages)")
+
+MACRO_CONFIG_INT(ClShowGhost, cl_show_ghost, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Show \"ghost\" tee")
