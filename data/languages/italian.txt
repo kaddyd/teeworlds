@@ -427,6 +427,9 @@ Yes
 You must restart the game for all settings to take effect.
 == E' necessario riavviare il gioco per rendere effettive le modifiche.
 
+en
+== it
+
 ##### needs translation #####
 
 %d%% loaded
@@ -517,6 +520,9 @@ CW
 == 
 
 Cancel
+== 
+
+Chat translation
 == 
 
 Clear collision

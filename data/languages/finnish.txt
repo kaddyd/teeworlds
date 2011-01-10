@@ -460,6 +460,9 @@ You must restart the game for all settings to take effect.
 Your skin
 == Sinun ulkonäkösi
 
+en
+== fi
+
 ##### needs translation #####
 
 %d%% loaded
@@ -547,6 +550,9 @@ CW
 == 
 
 Cancel
+== 
+
+Chat translation
 == 
 
 Clear collision

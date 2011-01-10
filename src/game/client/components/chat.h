@@ -23,8 +23,9 @@ class CChat : public CComponent
 		int m_Team;
 		int m_NameColor;
 		char m_aName[64];
-		char m_aText[512];
+		char m_aText[1024];
 		bool m_Highlighted;
+		void * m_pThread;
 	};
 
 	CLine m_aLines[MAX_LINES];
@@ -57,6 +58,7 @@ class CChat : public CComponent
 	static void ConChat(IConsole::IResult *pResult, void *pUserData);
 	static void ConShowChat(IConsole::IResult *pResult, void *pUserData);
 	
+	void TranslateLine(CLine * Line);
 public:
 	CChat();
 	~CChat();

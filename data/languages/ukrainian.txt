@@ -847,6 +847,9 @@ ZO
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [ctrl+p] Показати або приховати межі, в яких гравець може бачити карту#####
 
+en
+== uk
+
 ##### needs translation #####
 
 %i minute left
@@ -877,6 +880,9 @@ Background
 == 
 
 Blue value of the envelope
+== 
+
+Chat translation
 == 
 
 Clip H

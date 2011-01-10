@@ -130,6 +130,9 @@ Cancel
 Chat
 == Чат
 
+Chat translation
+== Перевод чата
+
 Clear collision
 == Очистить коллизии
 
@@ -991,8 +994,18 @@ Zoom: %d
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [ctrl+p] Показать или скрыть границы, в пределах которых игрок может видеть карту
 
+en
+== ru
+
 no limit
 == нет лимита
+
+##### needs translation #####
+
+Eye Candy
+== 
+
+##### old translations #####
 
 Winter
 == Зима
@@ -1003,15 +1016,9 @@ Jungle
 Grass
 == Трава
 
-Desert
-== Пустыня
-
 Old
 == Старый
 
-##### needs translation #####
+Desert
+== Пустыня
 
-Eye Candy
-== 
-
-##### old translations #####

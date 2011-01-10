@@ -346,3 +346,37 @@ void CNetBase::Init()
 {
 	ms_Huffman.Init(gs_aFreqTable);
 }
+
+
+int HttpGet(const char * Host, const char * Path, char * Buffer, int BufferSize)
+{
+	NETADDR Addr;
+	NETSOCKET Socket;
+	char SendBuf[1024];
+	int Received;
+
+	if (net_host_lookup(Host, &Addr, 0))
+		return 1;
+
+	Addr.port = 80;
+
+	Socket = net_tcp_create(&Addr);
+	if (Socket == NETSOCKET_INVALID)
+		return 1;
+
+	if (net_tcp_connect(Socket, &Addr))
+	{
+		net_tcp_close(Socket);
+		return 1;
+	}
+
+	str_format(SendBuf, sizeof(SendBuf), "GET %s HTTP/1.0\nHost: %s\n\n", Path, Host);
+	net_tcp_send(Socket, SendBuf, str_length(SendBuf));
+
+	Received = net_tcp_recv(Socket, Buffer, BufferSize - 1);
+	Buffer[Received + 1] = 0;
+
+	net_tcp_close(Socket);
+
+	return 0;
+}

@@ -433,6 +433,9 @@ You must restart the game for all settings to take effect.
 Your skin
 == Váš skin
 
+en
+== cs
+
 ##### needs translation #####
 
 %d%% loaded
@@ -523,6 +526,9 @@ CW
 == 
 
 Cancel
+== 
+
+Chat translation
 == 
 
 Clear collision

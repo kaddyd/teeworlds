@@ -98,3 +98,6 @@ MACRO_CONFIG_INT(AntiPingPlayers, cl_antiping_players, 1, 0, 1, CFGFLAG_CLIENT|C
 MACRO_CONFIG_INT(AntiPingOnlyIfBigLatency, cl_antiping_optimized, 1, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: works only if latency is big")
 MACRO_CONFIG_INT(AntiPingLatency, cl_antiping_optimized_latency, 100, 0, 999, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Antiping: works only if latency is bigger than this value")
 MACRO_CONFIG_INT(ClColorNicks, cl_color_nicks, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Color players' nicks")
+
+MACRO_CONFIG_INT(ClChatTranslate, cl_chat_translate, 0, 0, 1, CFGFLAG_CLIENT|CFGFLAG_SAVE, "Translate chat lines via Google Translate")
+MACRO_CONFIG_STR(ClChatTranslateTarget, cl_chat_translate_target, 8, "", CFGFLAG_CLIENT|CFGFLAG_SAVE, "Language code for translate (see http://goo.gl/Gj6Hr for supported languages)")

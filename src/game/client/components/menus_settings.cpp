@@ -817,6 +817,10 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 			g_Config.m_AntiPing ^= 1;
 	}
 	Right.HSplitTop(20.0f, &Button, &Right);
+	{
+		if(DoButton_CheckBox(&g_Config.m_ClChatTranslate, Localize("Chat translation"), g_Config.m_ClChatTranslate, &Button))
+			g_Config.m_ClChatTranslate ^= 1;
+	}
 
 	// auto demo settings
 	{

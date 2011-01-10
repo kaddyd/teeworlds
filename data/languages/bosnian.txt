@@ -576,6 +576,9 @@ CW
 Cancel
 == 
 
+Chat translation
+== 
+
 Clear collision
 == 
 
@@ -994,6 +997,9 @@ Zoom: %d
 == 
 
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
+== 
+
+en
 == 
 
 no limit

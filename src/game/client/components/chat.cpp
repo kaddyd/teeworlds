@@ -16,6 +16,8 @@
 #include <game/client/components/sounds.h>
 #include <game/localization.h>
 
+#include <engine/shared/translate.h>
+
 #include "chat.h"
 #include "hud.h"
 
@@ -49,6 +51,11 @@ void CChat::OnReset()
 		m_aLines[i].m_Time = 0;
 		m_aLines[i].m_aText[0] = 0;
 		m_aLines[i].m_aName[0] = 0;
+		if (m_aLines[i].m_pThread)
+		{
+			thread_destroy(m_aLines[i].m_pThread);
+			m_aLines[i].m_pThread = 0;
+		}
 	}
 	
 	m_Show = false;
@@ -295,6 +302,11 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 		m_aLines[m_CurrentLine].m_ClientId = ClientId;
 		m_aLines[m_CurrentLine].m_Team = Team;
 		m_aLines[m_CurrentLine].m_NameColor = -2;
+		if (m_aLines[m_CurrentLine].m_pThread)
+		{
+			thread_destroy(m_aLines[m_CurrentLine].m_pThread);
+			m_aLines[m_CurrentLine].m_pThread = 0;
+		}
 
 		if(ClientId == -1) // server message
 		{
@@ -321,6 +333,8 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 		char aBuf[1024];
 		str_format(aBuf, sizeof(aBuf), "%s%s", m_aLines[m_CurrentLine].m_aName, m_aLines[m_CurrentLine].m_aText);
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chat", aBuf);
+
+		TranslateLine(&m_aLines[m_CurrentLine]);
 	}
 
 	// play sound
@@ -465,4 +479,33 @@ void CChat::Say(int Team, const char *pLine)
 	Msg.m_Team = Team;
 	Msg.m_pMessage = pLine;
 	Client()->SendPackMsg(&Msg, MSGFLAG_VITAL);
+}
+
+void TranslateLineThreadProc(void * Data)
+{
+	char * Text = (char *)Data;
+
+	if (Text[0] == 0)
+		return;
+
+	const char * Target = Localize("en");
+	if (g_Config.m_ClChatTranslateTarget[0] != 0)
+		Target = g_Config.m_ClChatTranslateTarget;
+
+	char * Result = CTranslate::Translate(Text, Target);
+	if (!Result)
+		return;
+
+	str_format(Text, 1024 - 2, "%s", Result);
+
+	mem_free(Result);
+}
+
+void CChat::TranslateLine(CLine * Line)
+{
+	if (!g_Config.m_ClChatTranslate || !Line || Line->m_ClientId < 0 || Line->m_aText[0] == 0 || Line->m_ClientId == m_pClient->m_Snap.m_LocalCid)
+		return;
+
+	// +2 because of ": " at begin
+	Line->m_pThread = thread_create(TranslateLineThreadProc, Line->m_aText + 2);
 }

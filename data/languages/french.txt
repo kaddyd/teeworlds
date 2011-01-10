@@ -754,6 +754,9 @@ ZO
 [NumPad-] Zoom out
 == [ClavierNum-] Dézoomer
 
+en
+== fr
+
 no limit
 == pas de limite
 
@@ -787,6 +790,9 @@ Background
 == 
 
 Blue value of the envelope
+== 
+
+Chat translation
 == 
 
 Clip H

@@ -348,5 +348,6 @@ public:
 	static int IsSeqInBackroom(int Seq, int Ack);	
 };
 
+int HttpGet(const char * Host, const char * Path, char * Buffer, int BufferSize);
 
 #endif

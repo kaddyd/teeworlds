@@ -943,6 +943,9 @@ ZO
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [ctrl+p] Test grenzen. Deze grenzen laten zien wat een speler maximaal kan zien.
 
+en
+== nl
+
 no limit
 == ongelimiteerd
 
@@ -964,6 +967,9 @@ Antiping
 == 
 
 Background
+== 
+
+Chat translation
 == 
 
 Color nicks
