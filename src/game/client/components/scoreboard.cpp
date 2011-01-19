@@ -157,7 +157,7 @@ void CScoreboard::RenderDetailedScoreboard()
 			UI()->DoLabel(&footer, aBuf, footer.h * 0.8f, -1);
 		}
 
-		footer.VSplitLeft(400.0f, 0, &footer);
+		footer.VSplitLeft(300.0f, 0, &footer);
 
 		if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_TimeLimit)
 		{
@@ -165,7 +165,7 @@ void CScoreboard::RenderDetailedScoreboard()
 			UI()->DoLabel(&footer, aBuf, footer.h * 0.8f, -1);
 		}
 
-		footer.VSplitLeft(800.0f, 0, &footer);
+		footer.VSplitLeft(300.0f, 0, &footer);
 
 		if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_RoundNum && m_pClient->m_Snap.m_pGameobj->m_RoundCurrent)
 		{
