@@ -432,7 +432,7 @@ void CGameClient::UpdateLocalCharacterPos()
 {
 	if(g_Config.m_ClPredict && Client()->State() != IClient::STATE_DEMOPLAYBACK)
 	{
-		if(!m_Snap.m_pLocalCharacter || (m_Snap.m_pLocalCharacter->m_Health < 0) || (m_Snap.m_pGameobj && m_Snap.m_pGameobj->m_GameOver))
+		if(!m_Snap.m_pLocalCharacter || (m_Snap.m_pGameobj && m_Snap.m_pGameobj->m_GameOver))
 		{
 			// don't use predicted
 		}
@@ -1067,6 +1067,11 @@ void CGameClient::OnPredict()
 	}
 	
 	m_PredictedTick = Client()->PredGameTick();
+}
+
+void CGameClient::OnActivateEditor()
+{
+	OnRelease();
 }
 
 void CGameClient::CClientData::UpdateRenderInfo()

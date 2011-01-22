@@ -966,7 +966,13 @@ Round: %d/%d
 Shift
 == 
 
+Sound error
+== 
+
 Stop record
+== 
+
+The audio device couldn't be initialised.
 == 
 
 Tiles

@@ -943,9 +943,6 @@ ZO
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [ctrl+p] Test grenzen. Deze grenzen laten zien wat een speler maximaal kan zien.
 
-en
-== nl
-
 no limit
 == ongelimiteerd
 
@@ -963,46 +960,16 @@ no limit
 %i seconds left
 == 
 
-Antiping
-== 
-
-Background
-== 
-
-Chat translation
-== 
-
-Color nicks
-== 
-
-Detailed scoreboard
-== 
-
-Eye Candy
-== 
-
-Following: %s
-== 
-
-Freeview
-== 
-
-Full detailed scoreboard
-== 
-
 Name plates size
 == 
 
-Ok (%d)
+Sound error
 == 
 
-Round: %d/%d
+The audio device couldn't be initialised.
 == 
 
 Unable to delete the demo
-== 
-
-Zoom: %d
 == 
 
 ##### old translations #####
