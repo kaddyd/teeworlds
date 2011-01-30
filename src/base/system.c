@@ -1531,6 +1531,15 @@ unsigned str_quickhash(const char *str)
 }
 
 
+void hide_console_window()
+{
+#if defined(CONF_FAMILY_WINDOWS)
+	HWND ConsoleWnd = GetConsoleWindow();
+	if (ConsoleWnd)
+		ShowWindow(ConsoleWnd, SW_HIDE);
+#endif
+}
+
 #if defined(__cplusplus)
 }
 #endif

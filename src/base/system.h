@@ -1236,6 +1236,9 @@ int str_utf8_encode(char *ptr, int chr);
 */
 int str_utf8_check(const char *str);
 
+// Hide console window under Windows
+void hide_console_window();
+
 #ifdef __cplusplus
 }
 #endif

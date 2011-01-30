@@ -508,8 +508,7 @@ void CConsole::ParseArguments(int NumArgs, const char **ppArguments)
 		}
 		else if(!str_comp("-s", ppArguments[i]) || !str_comp("--silent", ppArguments[i]))
 		{
-			// skip silent param
-			continue;
+			hide_console_window();
 		}
 		else
 		{
