@@ -1850,8 +1850,23 @@ void CClient::Run()
 		// handle pending connects
 		if(m_aCmdConnect[0])
 		{
-			str_copy(g_Config.m_UiServerAddress, m_aCmdConnect, sizeof(g_Config.m_UiServerAddress));
-			Connect(m_aCmdConnect);
+			const char * pAddress = m_aCmdConnect;
+
+			bool bProtocolUsed = true;
+			const char * pProtocolString = "teeworlds://";
+	
+			for (int i = 0; i < str_length(pProtocolString); i++)
+			{
+				if (pAddress[i] == pProtocolString[i]) continue;
+				bProtocolUsed = false;
+				break;
+			}
+
+			if (bProtocolUsed)
+				pAddress += str_length(pProtocolString);
+
+			str_copy(g_Config.m_UiServerAddress, pAddress, sizeof(g_Config.m_UiServerAddress));
+			Connect(pAddress);
 			m_aCmdConnect[0] = 0;
 		}
 
