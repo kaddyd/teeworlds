@@ -546,9 +546,6 @@ Alpha value of the envelope
 Anim
 == 
 
-Antiping
-== 
-
 Append
 == 
 
@@ -556,9 +553,6 @@ Append map
 == 
 
 Aspect ratio
-== 
-
-Background
 == 
 
 Blue value of the envelope
@@ -576,10 +570,7 @@ CW
 Cancel
 == 
 
-Chat translation
-== 
-
-Clear collision
+Clear
 == 
 
 Clip H
@@ -594,6 +585,9 @@ Clip X
 Clip Y
 == 
 
+Collision
+== 
+
 Color
 == 
 
@@ -603,13 +597,10 @@ Color Env
 Color TO
 == 
 
-Color nicks
-== 
-
 Color+
 == 
 
-Constructs collision from this layer
+Constructs game tiles from this layer
 == 
 
 Creates a new color envelope
@@ -625,6 +616,9 @@ Creates a new quad layer
 == 
 
 Creates a new tile layer
+== 
+
+Death
 == 
 
 Decrease
@@ -649,9 +643,6 @@ Deletes the layer
 == 
 
 Detail
-== 
-
-Detailed scoreboard
 == 
 
 Down
@@ -684,9 +675,6 @@ Exits from the editor
 External
 == 
 
-Eye Candy
-== 
-
 File
 == 
 
@@ -696,13 +684,7 @@ File: %s
 Filename:
 == 
 
-Following: %s
-== 
-
-Freeview
-== 
-
-Full detailed scoreboard
+Game tiles
 == 
 
 Green value of the envelope
@@ -753,9 +735,6 @@ Load a new image to use in the map
 Load map
 == 
 
-Make collision
-== 
-
 Make external
 == 
 
@@ -778,9 +757,6 @@ None
 == 
 
 Normal animation speed
-== 
-
-Ok (%d)
 == 
 
 Opens a map and adds everything from that map to the current one
@@ -840,9 +816,6 @@ Refocus
 Remove
 == 
 
-Removes collision from this layer
-== 
-
 Removes the image from the map
 == 
 
@@ -868,9 +841,6 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 == 
 
 Rotation of the envelope
-== 
-
-Round: %d/%d
 == 
 
 Save
@@ -936,6 +906,9 @@ Toggles the envelope editor.
 Unable to delete the demo
 == 
 
+Unhookable
+== 
+
 Up
 == 
 
@@ -969,9 +942,6 @@ ZI
 ZO
 == 
 
-Zoom: %d
-== 
-
 [HOME] Restore map focus
 == 
 
@@ -1003,9 +973,6 @@ Zoom: %d
 == 
 
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
-== 
-
-en
 == 
 
 no limit

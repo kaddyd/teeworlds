@@ -91,9 +91,6 @@ Cancel
 Chat
 == Chat
 
-Clear collision
-== Wyczyść kolizję
-
 Close
 == Zamknij
 
@@ -120,9 +117,6 @@ Connection Problems...
 
 Console
 == Konsola
-
-Constructs collision from this layer
-== Tworzy kolizję z tej warstwy
 
 Controls
 == Sterowanie
@@ -367,9 +361,6 @@ Loading
 MOTD
 == Wiadomość dnia
 
-Make collision
-== Stwórz kolizję
-
 Make external
 == Użyj jako zewnętrzny
 
@@ -522,9 +513,6 @@ Remote console
 
 Remove
 == Usuń
-
-Removes collision from this layer
-== Usuwa kolizję z tej warstwy
 
 Removes the image from the map
 == Usuwa obrazek z mapy
@@ -778,9 +766,6 @@ ZO
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [Ctrl+P] Przełącza granice testowania. Te granice pokazują, ile najwięcej może zobaczyć gracz.
 
-en
-== pl
-
 ##### needs translation #####
 
 %d%% loaded
@@ -801,9 +786,6 @@ en
 Alpha value of the envelope
 == 
 
-Antiping
-== 
-
 Are you sure that you want to delete the demo?
 == 
 
@@ -816,13 +798,10 @@ Automatically record demos
 Automatically take game over screenshot
 == 
 
-Background
-== 
-
 Blue value of the envelope
 == 
 
-Chat translation
+Clear
 == 
 
 Clip H
@@ -837,19 +816,22 @@ Clip X
 Clip Y
 == 
 
+Collision
+== 
+
 Color
 == 
 
-Color nicks
+Constructs game tiles from this layer
+== 
+
+Death
 == 
 
 Delete demo
 == 
 
 Delete this envelope
-== 
-
-Detailed scoreboard
 == 
 
 Down
@@ -864,22 +846,13 @@ Enable/disable layer for saving
 Exit
 == 
 
-Eye Candy
-== 
-
 File: %s
 == 
 
 Folder
 == 
 
-Following: %s
-== 
-
-Freeview
-== 
-
-Full detailed scoreboard
+Game tiles
 == 
 
 Green value of the envelope
@@ -910,9 +883,6 @@ Name plates size
 == 
 
 New folder
-== 
-
-Ok (%d)
 == 
 
 Para X
@@ -960,9 +930,6 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 Rotation of the envelope
 == 
 
-Round: %d/%d
-== 
-
 Shift
 == 
 
@@ -984,6 +951,9 @@ Time limit: %d min
 Unable to delete the demo
 == 
 
+Unhookable
+== 
+
 Up
 == 
 
@@ -1000,9 +970,6 @@ X-axis of the envelope
 == 
 
 Y-axis of the envelope
-== 
-
-Zoom: %d
 == 
 
 [HOME] Restore map focus

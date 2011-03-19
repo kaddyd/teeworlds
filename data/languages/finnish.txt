@@ -460,9 +460,6 @@ You must restart the game for all settings to take effect.
 Your skin
 == Sinun ulkonäkösi
 
-en
-== fi
-
 ##### needs translation #####
 
 %d%% loaded
@@ -513,9 +510,6 @@ Alpha value of the envelope
 Anim
 == 
 
-Antiping
-== 
-
 Append
 == 
 
@@ -534,9 +528,6 @@ Automatically record demos
 Automatically take game over screenshot
 == 
 
-Background
-== 
-
 Blue value of the envelope
 == 
 
@@ -552,10 +543,7 @@ CW
 Cancel
 == 
 
-Chat translation
-== 
-
-Clear collision
+Clear
 == 
 
 Clip H
@@ -570,6 +558,9 @@ Clip X
 Clip Y
 == 
 
+Collision
+== 
+
 Color
 == 
 
@@ -579,13 +570,10 @@ Color Env
 Color TO
 == 
 
-Color nicks
-== 
-
 Color+
 == 
 
-Constructs collision from this layer
+Constructs game tiles from this layer
 == 
 
 Creates a new color envelope
@@ -601,6 +589,9 @@ Creates a new quad layer
 == 
 
 Creates a new tile layer
+== 
+
+Death
 == 
 
 Decrease
@@ -628,9 +619,6 @@ Deletes the layer
 == 
 
 Detail
-== 
-
-Detailed scoreboard
 == 
 
 Down
@@ -663,9 +651,6 @@ Exits from the editor
 External
 == 
 
-Eye Candy
-== 
-
 File
 == 
 
@@ -678,13 +663,7 @@ Filename:
 Folder
 == 
 
-Following: %s
-== 
-
-Freeview
-== 
-
-Full detailed scoreboard
+Game tiles
 == 
 
 Green value of the envelope
@@ -738,9 +717,6 @@ Load a new image to use in the map
 Load map
 == 
 
-Make collision
-== 
-
 Make external
 == 
 
@@ -769,9 +745,6 @@ None
 == 
 
 Normal animation speed
-== 
-
-Ok (%d)
 == 
 
 Open
@@ -840,9 +813,6 @@ Refocus
 Remove
 == 
 
-Removes collision from this layer
-== 
-
 Removes the image from the map
 == 
 
@@ -868,9 +838,6 @@ Rotation of the brush in degrees. Use left mouse button to drag and change the v
 == 
 
 Rotation of the envelope
-== 
-
-Round: %d/%d
 == 
 
 Save
@@ -939,6 +906,9 @@ Toggles the envelope editor.
 Unable to delete the demo
 == 
 
+Unhookable
+== 
+
 Up
 == 
 
@@ -970,9 +940,6 @@ ZI
 == 
 
 ZO
-== 
-
-Zoom: %d
 == 
 
 [HOME] Restore map focus

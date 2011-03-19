@@ -100,9 +100,6 @@ Cancel
 Chat
 == Чат
 
-Clear collision
-== Очистити колізію
-
 Close
 == Закрити
 
@@ -129,9 +126,6 @@ Connection Problems...
 
 Console
 == Консоль
-
-Constructs collision from this layer
-== Створити колізії з цього шару
 
 Controls
 == Управління
@@ -400,9 +394,6 @@ Loading
 MOTD
 == MOTD
 
-Make collision
-== Створити колізії
-
 Make external
 == Зробити зовнішнім
 
@@ -567,9 +558,6 @@ Remote console
 
 Remove
 == Видалити
-
-Removes collision from this layer
-== Видалити колізії з цього шару
 
 Removes the image from the map
 == Видалити зображення з карти
@@ -847,9 +835,6 @@ ZO
 [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
 == [ctrl+p] Показати або приховати межі, в яких гравець може бачити карту#####
 
-en
-== uk
-
 ##### needs translation #####
 
 %i minute left
@@ -867,22 +852,16 @@ en
 Alpha value of the envelope
 == 
 
-Antiping
-== 
-
 Automatically record demos
 == 
 
 Automatically take game over screenshot
 == 
 
-Background
-== 
-
 Blue value of the envelope
 == 
 
-Chat translation
+Clear
 == 
 
 Clip H
@@ -897,10 +876,16 @@ Clip X
 Clip Y
 == 
 
+Collision
+== 
+
 Color
 == 
 
-Color nicks
+Constructs game tiles from this layer
+== 
+
+Death
 == 
 
 Delete demo
@@ -909,22 +894,10 @@ Delete demo
 Delete this envelope
 == 
 
-Detailed scoreboard
-== 
-
-Eye Candy
-== 
-
 File: %s
 == 
 
-Following: %s
-== 
-
-Freeview
-== 
-
-Full detailed scoreboard
+Game tiles
 == 
 
 Green value of the envelope
@@ -943,9 +916,6 @@ Max demos
 == 
 
 Name plates size
-== 
-
-Ok (%d)
 == 
 
 Para X
@@ -975,9 +945,6 @@ Red value of the envelope
 Rotation of the envelope
 == 
 
-Round: %d/%d
-== 
-
 Shift
 == 
 
@@ -990,6 +957,9 @@ The audio device couldn't be initialised.
 Unable to delete the demo
 == 
 
+Unhookable
+== 
+
 Up
 == 
 
@@ -1000,9 +970,6 @@ X-axis of the envelope
 == 
 
 Y-axis of the envelope
-== 
-
-Zoom: %d
 == 
 
 [HOME] Restore map focus
