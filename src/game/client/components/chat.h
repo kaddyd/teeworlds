@@ -5,6 +5,8 @@
 #include <game/client/component.h>
 #include <game/client/lineinput.h>
 
+#include <base/system.h>
+
 class CChat : public CComponent
 {
 	CLineInput m_Input;
@@ -60,6 +62,8 @@ class CChat : public CComponent
 	
 	void TranslateLine(CLine * Line);
 public:
+	static LOCK m_TranslationLock;
+
 	CChat();
 	~CChat();
 

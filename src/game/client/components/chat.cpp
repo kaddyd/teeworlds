@@ -1,6 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 
+#include <base/system.h>
 #include <engine/graphics.h>
 #include <engine/textrender.h>
 #include <engine/keys.h>
@@ -15,22 +16,41 @@
 #include <game/client/components/sounds.h>
 #include <game/localization.h>
 
+#include <engine/shared/translate.h>
+
 #include "chat.h"
 
+LOCK CChat::m_TranslationLock;
 
 CChat::CChat()
 {
+	m_TranslationLock = lock_create();
+
 	OnReset();
+}
+
+CChat::~CChat()
+{
+	OnReset();
+
+	lock_destroy(m_TranslationLock);
 }
 
 void CChat::OnReset()
 {
+	lock_wait(m_TranslationLock);
 	for(int i = 0; i < MAX_LINES; i++)
 	{
 		m_aLines[i].m_Time = 0;
 		m_aLines[i].m_aText[0] = 0;
 		m_aLines[i].m_aName[0] = 0;
+		if (m_aLines[i].m_pThread)
+		{
+			thread_destroy(m_aLines[i].m_pThread);
+			m_aLines[i].m_pThread = 0;
+		}
 	}
+	lock_release(m_TranslationLock);
 	
 	m_Show = false;
 	m_InputUpdate = false;
@@ -215,6 +235,8 @@ void CChat::AddLine(int ClientID, int Team, const char *pLine)
 			}
 		}
 
+		lock_wait(m_TranslationLock);
+
 		m_CurrentLine = (m_CurrentLine+1)%MAX_LINES;
 		m_aLines[m_CurrentLine].m_Time = time_get();
 		m_aLines[m_CurrentLine].m_YOffset[0] = -1.0f;
@@ -223,6 +245,11 @@ void CChat::AddLine(int ClientID, int Team, const char *pLine)
 		m_aLines[m_CurrentLine].m_Team = Team;
 		m_aLines[m_CurrentLine].m_NameColor = -2;
 		m_aLines[m_CurrentLine].m_Highlighted = str_find_nocase(pLine, m_pClient->m_aClients[m_pClient->m_Snap.m_LocalClientID].m_aName) != 0;
+		if (m_aLines[m_CurrentLine].m_pThread)
+		{
+			thread_destroy(m_aLines[m_CurrentLine].m_pThread);
+			m_aLines[m_CurrentLine].m_pThread = 0;
+		}
 
 		if(ClientID == -1) // server message
 		{
@@ -249,6 +276,10 @@ void CChat::AddLine(int ClientID, int Team, const char *pLine)
 		char aBuf[1024];
 		str_format(aBuf, sizeof(aBuf), "%s%s", m_aLines[m_CurrentLine].m_aName, m_aLines[m_CurrentLine].m_aText);
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chat", aBuf);
+
+		lock_release(m_TranslationLock);
+
+		TranslateLine(&m_aLines[m_CurrentLine]);
 	}
 
 	// play sound
@@ -388,3 +419,35 @@ void CChat::Say(int Team, const char *pLine)
 	Msg.m_pMessage = pLine;
 	Client()->SendPackMsg(&Msg, MSGFLAG_VITAL);
 }
+
+void TranslateLineThreadProc(void * Data)
+{
+	char * Text = (char *)Data;
+
+	if (Text[0] == 0)
+		return;
+
+	const char * Target = Localize("en");
+	if (g_Config.m_ClChatTranslateTarget[0] != 0)
+		Target = g_Config.m_ClChatTranslateTarget;
+
+	char * Result = CTranslate::Translate(Text, Target);
+	if (!Result)
+		return;
+
+	lock_wait(CChat::m_TranslationLock);
+	str_format(Text, 1024 - 2, "%s", Result);
+	lock_release(CChat::m_TranslationLock);
+
+	mem_free(Result);
+}
+
+void CChat::TranslateLine(CLine * Line)
+{
+	if (!g_Config.m_ClChatTranslate || !Line || Line->m_ClientID < 0 || Line->m_aText[0] == 0 || Line->m_ClientID == m_pClient->m_Snap.m_LocalClientID)
+		return;
+
+	// +2 because of ": " at begin
+	Line->m_pThread = thread_create(TranslateLineThreadProc, Line->m_aText + 2);
+}
+

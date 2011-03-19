@@ -49,7 +49,7 @@ void CItems::RenderProjectile(const CNetObj_Projectile *pCurrent, int ItemID)
 
 
 	// Draw shadows of grenades
-	bool LocalPlayerInGame = m_pClient->m_aClients[m_pClient->m_Snap.m_LocalCid].m_Team != -1;
+	bool LocalPlayerInGame = m_pClient->m_aClients[m_pClient->m_Snap.m_LocalClientID].m_Team != -1;
 	int explode = 0; // explode detecting
 	
 	if(g_Config.m_AntiPing && g_Config.m_AntiPingGrenade && g_Config.m_AntiPingOnlyIfBigLatency && (g_Config.m_AntiPingLatency <= m_pClient->m_Snap.m_pLocalInfo->m_Latency) && pCurrent->m_Type == WEAPON_GRENADE && LocalPlayerInGame && !m_pClient->m_Snap.m_pGameobj->m_GameOver)
@@ -72,7 +72,7 @@ void CItems::RenderProjectile(const CNetObj_Projectile *pCurrent, int ItemID)
 		}
 		
 		// Draw shadow only if grenade directed to local player (optionaly)
-		int LocalCid = m_pClient->m_Snap.m_LocalCid;
+		int LocalCid = m_pClient->m_Snap.m_LocalClientID;
 		CNetObj_CharacterCore& CurChar = m_pClient->m_Snap.m_aCharacters[LocalCid].m_Cur;
 		CNetObj_CharacterCore& PrevChar = m_pClient->m_Snap.m_aCharacters[LocalCid].m_Prev;
 		vec2 ServerPos = mix(vec2(PrevChar.m_X, PrevChar.m_Y), vec2(CurChar.m_X, CurChar.m_Y), Client()->IntraGameTick());

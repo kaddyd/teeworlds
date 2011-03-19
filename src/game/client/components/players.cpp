@@ -485,14 +485,14 @@ void CPlayers::RenderPlayer(
 	}
 	
 	// Draw shadows of enemy tees
-	bool LocalPlayerInGame = m_pClient->m_aClients[m_pClient->m_Snap.m_LocalCid].m_Team != -1;
-	bool CurPlayerIsEnemy = IsTeamplay == false || (IsTeamplay && m_pClient->m_aClients[m_pClient->m_Snap.m_LocalCid].m_Team != m_pClient->m_aClients[pPlayerInfo->m_ClientId].m_Team);
+	bool LocalPlayerInGame = m_pClient->m_aClients[m_pClient->m_Snap.m_LocalClientID].m_Team != -1;
+	bool CurPlayerIsEnemy = IsTeamplay == false || (IsTeamplay && m_pClient->m_aClients[m_pClient->m_Snap.m_LocalClientID].m_Team != m_pClient->m_aClients[pPlayerInfo->m_ClientID].m_Team);
 
 	if (g_Config.m_AntiPing && g_Config.m_AntiPingPlayers && g_Config.m_AntiPingOnlyIfBigLatency && (g_Config.m_AntiPingLatency <= m_pClient->m_Snap.m_pLocalInfo->m_Latency) && !m_pClient->m_Snap.m_pGameobj->m_GameOver && LocalPlayerInGame && pInfo.m_Local == false && CurPlayerIsEnemy && pPlayerChar && pPlayerChar->m_PlayerState == PLAYERSTATE_PLAYING)
 	{
 		CCharacterCore ShadowPlayer;
 		CNetObj_CharacterCore buf;
-		m_pClient->m_aClients[pPlayerInfo->m_ClientId].m_Predicted.Write(&buf);
+		m_pClient->m_aClients[pPlayerInfo->m_ClientID].m_Predicted.Write(&buf);
 		CWorldCore world;
 		ShadowPlayer.m_pWorld = &world;
 		ShadowPlayer.Reset();
@@ -501,14 +501,14 @@ void CPlayers::RenderPlayer(
 		CNetObj_CharacterCore next;
 		ShadowPlayer.Write(&next);
 		
-		vec2 Prev = m_pClient->m_aClients[pPlayerInfo->m_ClientId].m_PreviousPrediction;
+		vec2 Prev = m_pClient->m_aClients[pPlayerInfo->m_ClientID].m_PreviousPrediction;
 		vec2 NextVec = vec2(next.m_X, next.m_Y);
 		vec2 ShadowPosition = NextVec;
 		
 		float dist = fabs(distance(NextVec, Prev));
 		if (dist < 300) // like it should be usual
 			ShadowPosition = mix(Prev, NextVec, Client()->PredIntraGameTick());
-		m_pClient->m_aClients[pPlayerInfo->m_ClientId].m_PreviousPrediction = ShadowPosition;
+		m_pClient->m_aClients[pPlayerInfo->m_ClientID].m_PreviousPrediction = ShadowPosition;
 		
 		CTeeRenderInfo Shadow = RenderInfo;
 		float color_body_mix = (Shadow.m_ColorBody.r + Shadow.m_ColorBody.g + Shadow.m_ColorBody.b) / 2.5f;
@@ -522,7 +522,7 @@ void CPlayers::RenderPlayer(
 		Shadow.m_ColorFeet.g = color_feet_mix;
 		Shadow.m_ColorFeet.b = color_feet_mix;
 		
-		Shadow.m_Texture = m_pClient->m_pSkins->Get(m_pClient->m_aClients[pPlayerInfo->m_ClientId].m_SkinId)->m_ColorTexture;
+		Shadow.m_Texture = m_pClient->m_pSkins->Get(m_pClient->m_aClients[pPlayerInfo->m_ClientID].m_SkinID)->m_ColorTexture;
 		
 		// Render shadow
 		RenderTools()->RenderTee(&State, &Shadow, Player.m_Emote, Direction, ShadowPosition); 

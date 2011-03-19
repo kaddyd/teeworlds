@@ -408,10 +408,10 @@ void CScoreboard::RenderDetailedScoreboard()
 
 			if (team != 2)
 			{
-				CTeeRenderInfo teeRenderInfo = m_pClient->m_aClients[pInfo->m_ClientId].m_RenderInfo;
+				CTeeRenderInfo teeRenderInfo = m_pClient->m_aClients[pInfo->m_ClientID].m_RenderInfo;
 				teeRenderInfo.m_Size *= lineHeight / 64.0f;
 
-				if((m_pClient->m_Snap.m_paFlags[0] && m_pClient->m_Snap.m_paFlags[0]->m_CarriedBy == pInfo->m_ClientId) || (m_pClient->m_Snap.m_paFlags[1] && m_pClient->m_Snap.m_paFlags[1]->m_CarriedBy == pInfo->m_ClientId))
+				if((m_pClient->m_Snap.m_paFlags[0] && m_pClient->m_Snap.m_paFlags[0]->m_CarriedBy == pInfo->m_ClientID) || (m_pClient->m_Snap.m_paFlags[1] && m_pClient->m_Snap.m_paFlags[1]->m_CarriedBy == pInfo->m_ClientID))
 				{
 					Graphics()->BlendNormal();
 					Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
@@ -431,7 +431,7 @@ void CScoreboard::RenderDetailedScoreboard()
 
 			line.VSplitLeft(50.0f, 0, &line);
 
-			UI()->DoLabel(&line, m_pClient->m_aClients[pInfo->m_ClientId].m_aName, lineHeight * 0.8f, -1);
+			UI()->DoLabel(&line, m_pClient->m_aClients[pInfo->m_ClientID].m_aName, lineHeight * 0.8f, -1);
 
 			line.VSplitLeft(350.0f, 0, &line);
 
@@ -458,11 +458,11 @@ void CScoreboard::RenderDetailedScoreboard()
 			{
 				{
 					CUIRect line_t = line;
-					if (m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKills == 0 &&
-					    m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled == 0)
+					if (m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKills == 0 &&
+					    m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled == 0)
 						str_format(aBuf, sizeof(aBuf), "---");
 					else
-						str_format(aBuf, sizeof(aBuf), "%d/%.1f", m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKills - m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled, (float)m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKills / (float)(m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled == 0 ? 1 : m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled));
+						str_format(aBuf, sizeof(aBuf), "%d/%.1f", m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKills - m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled, (float)m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKills / (float)(m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled == 0 ? 1 : m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled));
 					line_t.x += (spacing - TextRender()->TextWidth(0, lineHeight * 0.8f, aBuf, -1)) * 0.5f;
 					UI()->DoLabel(&line_t, aBuf, lineHeight * 0.8f, -1);
 				}
@@ -471,11 +471,11 @@ void CScoreboard::RenderDetailedScoreboard()
 
 				{
 					CUIRect line_t = line;
-					if (m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKills == 0 &&
-					    m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled == 0)
+					if (m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKills == 0 &&
+					    m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled == 0)
 						str_format(aBuf, sizeof(aBuf), "---");
 					else
-						str_format(aBuf, sizeof(aBuf), "%d/%d", m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKills, m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_TotalKilled);
+						str_format(aBuf, sizeof(aBuf), "%d/%d", m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKills, m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_TotalKilled);
                                         line_t.x += (spacing - TextRender()->TextWidth(0, lineHeight * 0.8f, aBuf, -1)) * 0.5f;
 					UI()->DoLabel(&line_t, aBuf, lineHeight * 0.8f, -1);
 				}
@@ -489,7 +489,7 @@ void CScoreboard::RenderDetailedScoreboard()
 						if (!activeWeapons[i]) continue;
 
 						CUIRect line_t = line;
-						str_format(aBuf, sizeof(aBuf), "%d/%d", m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_aKills[i], m_pClient->m_aClients[pInfo->m_ClientId].m_Stats.m_aKilled[i]);
+						str_format(aBuf, sizeof(aBuf), "%d/%d", m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_aKills[i], m_pClient->m_aClients[pInfo->m_ClientID].m_Stats.m_aKilled[i]);
 						line_t.x += (spacing - TextRender()->TextWidth(0, lineHeight * 0.8f, aBuf, -1)) * 0.5f;
 						UI()->DoLabel(&line_t, aBuf, lineHeight * 0.8f, -1);
 

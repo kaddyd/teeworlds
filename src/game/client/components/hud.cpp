@@ -139,9 +139,9 @@ void CHud::RenderScoreHud()
 						const char *pName = m_pClient->m_aClients[ID].m_aName;
 						float w = TextRender()->TextWidth(0, 10.0f, pName, -1);
 
-						if (g_Config.m_ClColorNicks && m_pClient->m_Snap.m_paPlayerInfos[Id])
+						if (g_Config.m_ClColorNicks && m_pClient->m_Snap.m_paPlayerInfos[ID])
 						{
-							vec3 color = GetNickColor(m_pClient->m_Snap.m_paPlayerInfos[Id]);
+							vec3 color = GetNickColor(m_pClient->m_Snap.m_paPlayerInfos[ID]);
 							TextRender()->TextColor(color.r, color.g, color.b, 1.0f);
 						}
 
@@ -463,7 +463,7 @@ vec3 CHud::GetNickColor(const CNetObj_PlayerInfo * pPlayerInfo)
 		}
 	}
 
-	float q = fabs(sinf((float)pPlayerInfo->m_ClientId / (float)MAX_CLIENTS));
+	float q = fabs(sinf((float)pPlayerInfo->m_ClientID / (float)MAX_CLIENTS));
 	vec3 color = HslToRgb(vec3(q, 1.0f, 0.8f));
 	return color;
 }
