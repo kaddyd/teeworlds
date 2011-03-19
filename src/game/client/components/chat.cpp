@@ -20,25 +20,18 @@
 
 #include "chat.h"
 
-LOCK CChat::m_TranslationLock;
-
 CChat::CChat()
 {
-	m_TranslationLock = lock_create();
-
 	OnReset();
 }
 
 CChat::~CChat()
 {
 	OnReset();
-
-	lock_destroy(m_TranslationLock);
 }
 
 void CChat::OnReset()
 {
-	lock_wait(m_TranslationLock);
 	for(int i = 0; i < MAX_LINES; i++)
 	{
 		m_aLines[i].m_Time = 0;
@@ -50,7 +43,6 @@ void CChat::OnReset()
 			m_aLines[i].m_pThread = 0;
 		}
 	}
-	lock_release(m_TranslationLock);
 	
 	m_Show = false;
 	m_InputUpdate = false;
@@ -235,8 +227,6 @@ void CChat::AddLine(int ClientID, int Team, const char *pLine)
 			}
 		}
 
-		lock_wait(m_TranslationLock);
-
 		m_CurrentLine = (m_CurrentLine+1)%MAX_LINES;
 		m_aLines[m_CurrentLine].m_Time = time_get();
 		m_aLines[m_CurrentLine].m_YOffset[0] = -1.0f;
@@ -276,8 +266,6 @@ void CChat::AddLine(int ClientID, int Team, const char *pLine)
 		char aBuf[1024];
 		str_format(aBuf, sizeof(aBuf), "%s%s", m_aLines[m_CurrentLine].m_aName, m_aLines[m_CurrentLine].m_aText);
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chat", aBuf);
-
-		lock_release(m_TranslationLock);
 
 		TranslateLine(&m_aLines[m_CurrentLine]);
 	}
@@ -435,9 +423,7 @@ void TranslateLineThreadProc(void * Data)
 	if (!Result)
 		return;
 
-	lock_wait(CChat::m_TranslationLock);
 	str_format(Text, 1024 - 2, "%s", Result);
-	lock_release(CChat::m_TranslationLock);
 
 	mem_free(Result);
 }

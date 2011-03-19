@@ -62,8 +62,6 @@ class CChat : public CComponent
 	
 	void TranslateLine(CLine * Line);
 public:
-	static LOCK m_TranslationLock;
-
 	CChat();
 	~CChat();
 
